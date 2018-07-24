@@ -5,22 +5,60 @@ server <- function(input, output, session){
     logcontent <- reactiveVal(NULL)
     err <- reactiveVal(NULL)
     
-    observeEvent(input$logrefresh, {
-        logcontent(read_file('../process.log'))
+    # output$node1UI <- renderUI({
+    #     box(
+    #         width = 12,
+    #         status = "primary",
+    #         title = "Node 1",
+    #         actionButton('exec_batch1', 'Run batch operation'),
+    #         actionButton('exec_thread1', 'Run thread operation'),
+    #         verbatimTextOutput('result1')
+    #     )
+    # })
+    
+    output$swaggerlink1 <- renderUI({
+        if(apis_fetched){
+            a(href = node1$swagger_url, target="_blank", 'Goto to Swagger UI')
+        }
     })
     
-    observeEvent(input$exec1, {
-        if(ops_fetched){ # only when operations are fetched
-            response <- ops_node1[[1]]()
+    observeEvent(input$logrefresh, {
+        loglines <- read_lines('../process.log') %>% 
+            sort(decreasing = T) %>% 
+            head(20) 
+        logcontent(loglines)
+    })
+    
+    observeEvent(input$exec_batch1, {
+        if(apis_fetched){ # only when operations are fetched
+            response <- node1$ops[[1]]()
             ans1(httr::content(response))    
         }else{
             err(errmsg)
         }
     })
     
-    observeEvent(input$exec2, {
-        if(ops_fetched){ # only when operations are fetched
-            response <- ops_node2[[1]]()
+    observeEvent(input$exec_thread1, {
+        if(apis_fetched){ # only when operations are fetched
+            response <- node1$ops[[2]]()
+            ans1(httr::content(response))    
+        }else{
+            err(errmsg)
+        }
+    })
+    
+    observeEvent(input$exec_batch2, {
+        if(apis_fetched){ # only when operations are fetched
+            response <- node2$ops[[1]]()
+            ans2(httr::content(response))    
+        }else{
+            err(errmsg)
+        }
+    })
+    
+    observeEvent(input$exec_thread2, {
+        if(apis_fetched){ # only when operations are fetched
+            response <- node2$ops[[2]]()
             ans2(httr::content(response))    
         }else{
             err(errmsg)
@@ -36,11 +74,11 @@ server <- function(input, output, session){
     })
     
     output$logfile <- renderPrint({
-        cat(logcontent())
+        cat(logcontent(), fill=T)
     })
     
     output$error <- renderPrint({
-        cat(err())
+        cat(err(), fill=T)
     })
     
     # debugging request header

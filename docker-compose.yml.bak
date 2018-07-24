@@ -1,7 +1,6 @@
 version: '3'
 services:
   client:
-    #image: qunis/qaf_client
     build: client/.
     #ports:
     # - "80:3838"
@@ -9,16 +8,11 @@ services:
      - "./process.log:/srv/process.log"
     restart: always
   node1:
-    #image: qunis/qaf_node
     build: node/.
     volumes:
       - "./process.log:/app/process.log"
     restart: always
-    #deploy:
-    #  replicas: 5
-      #restart-policy: on-failure
   node2:
-    #image: qunis/qaf_node
     build: node/.
     volumes:
       - "./process.log:/app/process.log"
@@ -27,7 +21,7 @@ services:
     #depends_on:
     #  - node1
     #  - node2
-    #image: qunis/qaf_nginx
+    #image: nginx
     build: nginx/.
     ports:
      - "80:80"
@@ -44,13 +38,3 @@ services:
      - "6379:6379"
     volumes:
      - "./redisdata:/data"
-#  visualizer:
-#    image: dockersamples/visualizer:stable
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - "/var/run/docker.sock:/var/run/docker.sock"
-#    deploy:
-#      placement:
-#        constraints: [node.role == manager]
-

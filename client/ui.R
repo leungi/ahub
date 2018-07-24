@@ -11,7 +11,8 @@ pkgs <- c('tidyverse',
           #'DT'
           'rapiclient',
           'jsonlite',
-          'httr'
+          'httr',
+          'swagger'
           )
 
 # load packages
@@ -66,20 +67,23 @@ body <- dashboardBody(
     shinyDashboardThemes(theme = "blue_gradient"),
     tabItems(
         tabItem(tabName = "node1",
-                box(
-                    width = 12,
+                #uiOutput("node1UI")
+                box(width = 12,
                     status = "primary",
                     title = "Node 1",
-                    actionButton('exec1', 'Run first operation'),
-                    verbatimTextOutput('result1')
-                    
-                )),
+                        actionButton('exec_batch1', 'Run batch operation'),
+                        actionButton('exec_thread1', 'Run thread operation'),
+                        uiOutput('swaggerlink1'),
+                        verbatimTextOutput('result1')
+                    )
+                ),
         tabItem(tabName = "node2",
                 box(
                     width = 12,
                     status = "primary",
-                    title = "Node 1",
-                    actionButton('exec2', 'Run first operation'),
+                    title = "Node 2",
+                    actionButton('exec_batch2', 'Run batch operation'),
+                    actionButton('exec_thread2', 'Run thread operation'),
                     verbatimTextOutput('result2')
                     
                 )),

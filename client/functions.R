@@ -1,7 +1,7 @@
 
 
 
-get_ops <-
+get_node_api <-
     function(host = 'localhost',
              port = '80',
              dir = 'node1',
@@ -12,10 +12,14 @@ get_ops <-
         
         if (is.null(uid)) {
             # without basic auth
-            swagger <- GET(url=glue::glue("{scheme}://{host}:{port}/{dir}/swagger.json")) %>% content() 
+            swagger <- GET(url=glue::glue("{scheme}://{host}:{port}/{dir}/swagger.json")) %>% content()
+            swagger_url <- glue::glue("{scheme}://{host}:{port}/{dir}/__swagger__/")
+            #swagger_page <- GET(url=glue::glue("{scheme}://{host}:{port}/{dir}/__swagger__/")) %>% content(as = "text") 
         } else{
             # with basic auth
             swagger <- GET(url=glue::glue("{scheme}://{uid}:{pwd}@{host}:{port}/{dir}/swagger.json")) %>% content() 
+            swagger_url <- glue::glue("{scheme}://{uid}:{pwd}@{host}:{port}/{dir}/__swagger__/")
+            #swagger_page <- GET(url=glue::glue("{scheme}://{uid}:{pwd}@{host}:{port}/{dir}/__swagger__/")) %>% content(as = "text") 
         }
         # exchange hostname and paths in swagger definition
         swagger$host <- paste0(host, ":", port)
@@ -26,11 +30,18 @@ get_ops <-
         api <- get_api(toJSON(swagger))
         
         # extract valid operations
-        get_operations(api,
+        ops <- get_operations(api,
                        .headers = c("Authorization" = paste(
                            "Basic", glue::glue("{uid}:{pwd}") %>% base64_enc()
                        )))
+        
+        return(list(api = api,
+                    ops = ops,
+                    swagger= swagger,
+                    swagger_url = swagger_url))
     }
 
 
 #swagger <- GET(url=glue::glue("{protocol}://{uid}:{pwd}@{host}:{port}/{dir}/swagger.json")) %>% content() 
+
+

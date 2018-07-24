@@ -1,0 +1,70 @@
+version: '3'
+services:
+  client:
+    image: qunis/qaf_client:latest
+    #build: client/.
+    #ports:
+    # - "80:3838"
+    #volumes:
+    # - "/var/log/qaf.log:/srv/process.log"
+    networks:
+      - webnet
+    #restart: always
+  node1:
+    image: qunis/qaf_node
+    #build: node/.
+    #volumes:
+    #  - "/var/log/qaf.log:/app/process.log"
+    #restart: always
+    deploy:
+      replicas: 1
+      #restart-policy: on-failure
+    networks:
+      - webnet
+  node2:
+    image: qunis/qaf_node
+    #build: node/.
+    #volumes:
+    #  - "/var/log/qaf.log:/app/process.log"
+    networks:
+      - webnet
+    #restart: always
+  nginx:
+    image: qunis/qaf_nginx
+    #build: nginx/.
+    ports:
+      - "80:80"
+      - "443:443"
+     # - "8001:8001"
+     # - "8002:8002"
+    networks:
+      - webnet
+    #restart: always
+    #volumes:
+    #  - "./nginx/include_nginx_conf.txt:/etc/nginx/nginx.conf"
+    #  - "./nginx:/etc/nginx/config"
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - "/home/docker:/data"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+networks:
+  webnet:
+

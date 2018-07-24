@@ -7,3 +7,5 @@ RUN apt-get update && \
 		-keyout /etc/nginx/server.key \
 		-out /etc/nginx/server.crt && \
 	service nginx start
+	
+ADD nginx.conf /etc/nginx/
