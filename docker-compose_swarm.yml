@@ -17,7 +17,7 @@ services:
     #  - "/var/log/qaf.log:/app/process.log"
     #restart: always
     deploy:
-      replicas: 1
+      replicas: 5
       #restart-policy: on-failure
     networks:
       - webnet
@@ -48,7 +48,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - "/home/docker:/data"
+       - "./redisdata:/data"
     deploy:
       placement:
         constraints: [node.role == manager]
