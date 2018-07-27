@@ -1,12 +1,21 @@
-FROM trestletech/plumber
+FROM rocker/tidyverse
 
-#COPY requirements.txt /app/
-#RUN cat /app/requirements.txt | install2.r
+RUN apt-get update -qq && apt-get install -y \
+  git-core \
+  libssl-dev \
+  libcurl4-gnutls-dev && \
+  apt-get clean
 
-RUN install2.r future futile.logger rredis
+# RUN R -e 'install.packages(c("devtools"))'
+#RUN R -e 'devtools::install_github("trestletech/plumber")'
+
+# additional packages
+RUN install2.r plumber future futile.logger rredis glue lubridate
+
+EXPOSE 8000
 
 COPY *.R /app/
 WORKDIR /app
 
 ENTRYPOINT ["Rscript"]
-CMD ["startapi.R"]
+CMD ["run_api.R"]

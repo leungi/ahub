@@ -1,56 +1,58 @@
-version: '3'
+version: '3.3'
 services:
   client:
-    #image: qunis/qaf_client
-    build: client/.
-    #ports:
-    # - "80:3838"
-    volumes:
-     - "./process.log:/srv/process.log"
-    restart: always
+    image: qunis/qaf_client:latest
+    networks:
+      - webnet
   node1:
-    #image: qunis/qaf_node
-    build: node/.
-    volumes:
-      - "./process.log:/app/process.log"
-    restart: always
-    #deploy:
-    #  replicas: 5
+    image: qunis/qaf_node
+    deploy:
+      replicas: 1
       #restart-policy: on-failure
+    depends_on:
+     - redis
+    networks:
+      - webnet
   node2:
-    #image: qunis/qaf_node
-    build: node/.
-    volumes:
-      - "./process.log:/app/process.log"
-    restart: always
+    image: qunis/qaf_node 
+    deploy:
+      replicas: 3
+      #restart-policy: on-failure
+    depends_on:
+     - redis
+    networks:
+      - webnet
   nginx:
-    #depends_on:
-    #  - node1
-    #  - node2
-    #image: qunis/qaf_nginx
-    build: nginx/.
+    image: qunis/qaf_nginx
     ports:
-     - "80:80"
-     - "443:443"
-     - "8001:8001"
-     - "8002:8002"
-    restart: always
-    volumes:
-      - "./nginx/include_nginx_conf.txt:/etc/nginx/nginx.conf"
-      - "./nginx:/etc/nginx/config"
+      - "80:80"
+      - "443:443"
+     # - "8001:8001"
+     # - "8002:8002"
+    networks:
+      - webnet
   redis:
-    image: redis
+    image: redis:alpine
     ports:
-     - "6379:6379"
+      - "6379:6379"
     volumes:
-     - "./redisdata:/data"
-#  visualizer:
-#    image: dockersamples/visualizer:stable
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - "/var/run/docker.sock:/var/run/docker.sock"
-#    deploy:
-#      placement:
-#        constraints: [node.role == manager]
+       - "./redisdata:/data"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+    networks:
+      - webnet
+networks:
+  webnet:
 
