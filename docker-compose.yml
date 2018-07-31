@@ -16,7 +16,7 @@ services:
   node2:
     image: qunis/qaf_node 
     deploy:
-      replicas: 3
+      replicas: 5
       #restart-policy: on-failure
     depends_on:
      - redis
@@ -53,6 +53,10 @@ services:
         constraints: [node.role == manager]
     networks:
       - webnet
+  #artillery:
+  #  image: qunis/qaf_artillery
+  #  networks:
+  #    - webnet
 networks:
   webnet:
 

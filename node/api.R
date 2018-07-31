@@ -110,7 +110,7 @@ thread <- function(t = 1) {
 	flog.info('Process %s started', process_name)
 	set_pid_status(pid, 'running')
 	# do some stuff ##################
-	dummy_process(pid, t)
+	dummy_process(pid, as.numeric(t))
 	##################################
 	set_pid_status(pid, 'finished')
 	# wrap up

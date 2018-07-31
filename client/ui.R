@@ -67,26 +67,33 @@ body <- dashboardBody(
     shinyDashboardThemes(theme = "blue_gradient"),
     tabItems(
         tabItem(tabName = "node1",
-                #uiOutput("node1UI")
-                box(width = 12,
-                    status = "primary",
+                tabBox(width = 12,
+                    #status = "primary",
                     title = "Node 1",
+                    tabPanel('Single execution',
                         actionButton('exec_batch1', 'Run batch operation'),
                         actionButton('exec_thread1', 'Run thread operation'),
-                        uiOutput('swaggerlink1'),
                         verbatimTextOutput('result1')
+                        ),
+                    tabPanel('Load test',
+                        p('Load test')
+                        )
                     )
                 ),
         tabItem(tabName = "node2",
-                box(
-                    width = 12,
-                    status = "primary",
-                    title = "Node 2",
-                    actionButton('exec_batch2', 'Run batch operation'),
-                    actionButton('exec_thread2', 'Run thread operation'),
-                    verbatimTextOutput('result2')
-                    
-                )),
+                tabBox(width = 12,
+                       #status = "primary",
+                       title = "Node 2",
+                       tabPanel('Single execution',
+                                actionButton('exec_batch2', 'Run batch operation'),
+                                actionButton('exec_thread2', 'Run thread operation'),
+                                verbatimTextOutput('result2')
+                            ),
+                       tabPanel('Load test',
+                                p('Load test')
+                            )
+                        )
+                ),
         tabItem(tabName = 'logs',
                 box(
                     width = 12,
@@ -114,7 +121,7 @@ body <- dashboardBody(
 
 
 shinyUI(
-    dashboardPage(header, sidebar, body)
+    dashboardPage(header, sidebar, body, title = 'QAF')
 )
 
 

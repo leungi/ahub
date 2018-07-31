@@ -5,17 +5,6 @@ server <- function(input, output, session){
     logcontent <- reactiveVal(NULL)
     err <- reactiveVal(NULL)
     
-    # output$node1UI <- renderUI({
-    #     box(
-    #         width = 12,
-    #         status = "primary",
-    #         title = "Node 1",
-    #         actionButton('exec_batch1', 'Run batch operation'),
-    #         actionButton('exec_thread1', 'Run thread operation'),
-    #         verbatimTextOutput('result1')
-    #     )
-    # })
-    
     output$swaggerlink1 <- renderUI({
         if(apis_fetched){
             a(href = node1$swagger_url, target="_blank", 'Goto to Swagger UI')
