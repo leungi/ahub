@@ -1,2 +1,9 @@
 /redisdata/*.rdb
 .Rproj.user
+/*.Rhistory
+/*.Rproj
+/modules/pynode/__pycache__
+/modules/pynode/.idea
+/modules/boss/.idea
+/modules/boss/__pycache__
+/.idea

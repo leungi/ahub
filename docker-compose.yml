@@ -1,36 +1,24 @@
 version: '3.3'
 services:
   client:
-    image: qunis/qaf_client:latest
-    networks:
-      - webnet
+    image: qunis/qaf_client
   node1:
     image: qunis/qaf_node
     deploy:
       replicas: 1
-      #restart-policy: on-failure
     depends_on:
      - redis
-    networks:
-      - webnet
   node2:
     image: qunis/qaf_node 
     deploy:
-      replicas: 5
-      #restart-policy: on-failure
+      replicas: 1
     depends_on:
      - redis
-    networks:
-      - webnet
   nginx:
     image: qunis/qaf_nginx
     ports:
       - "80:80"
       - "443:443"
-     # - "8001:8001"
-     # - "8002:8002"
-    networks:
-      - webnet
   redis:
     image: redis:alpine
     ports:
@@ -40,8 +28,12 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
-    networks:
-      - webnet
+  boss:
+    image: qunis/qaf_boss
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis    
   visualizer:
     image: dockersamples/visualizer:stable
     ports:
@@ -51,12 +43,5 @@ services:
     deploy:
       placement:
         constraints: [node.role == manager]
-    networks:
-      - webnet
-  #artillery:
-  #  image: qunis/qaf_artillery
-  #  networks:
-  #    - webnet
-networks:
-  webnet:
+
 

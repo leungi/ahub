@@ -1,1 +1,0 @@
-docker run -ti qunis/qaf_artillery artillery quick -c 5 -kn 5 https://192.168.137.16/node2/thread

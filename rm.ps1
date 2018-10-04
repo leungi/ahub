@@ -1,1 +1,1 @@
-docker stack rm qaf
+docker stack rm ahub

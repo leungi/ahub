@@ -1,1 +1,1 @@
-docker stack deploy -c .\docker-compose.yml qaf
+docker stack deploy -c .\docker-compose.yml ahub
