@@ -14,9 +14,9 @@ The framework aims at providing a unified approach to run scripts in any languag
 
 For running the demo environment you need to install docker. Please follow the official guide on the docker homepage.
 
-[Getting started with Docker!](https://www.docker.com/get-started)
+[Install Docker!](https://www.docker.com/get-started)
 
-Once docker is running (make sure it is configured to run "Linux containers"), you can run the demo on bash or powershell with the following command.
+Once docker is running (make sure it is configured to run "Linux containers"), you can run the demo on bash or powershell with the following command (when in the cloned main folder).
 
 ```(powershell)
 docker stack deploy -c .\docker-compose.yml ahub
@@ -62,4 +62,4 @@ TODO
 
 # Contribute
 
-Please get in contact with me at mailto:martin.hanewald@qunis.de if you are intersted in contributing.
+Please get in contact with me at mailto:martin.hanewald@qunis.de if you are interested in contributing.
