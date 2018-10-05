@@ -1,21 +1,23 @@
 version: '3.3'
 services:
   client:
-    image: qunis/qaf_client
+    image: qunis/ahub_client
   node1:
-    image: qunis/qaf_node
+    image: qunis/ahub_rnode
     deploy:
       replicas: 1
     depends_on:
      - redis
   node2:
-    image: qunis/qaf_node 
+    image: qunis/ahub_rnode 
     deploy:
-      replicas: 1
+      replicas: 5
     depends_on:
      - redis
+  node3:
+    image: qunis/prophetdemo
   nginx:
-    image: qunis/qaf_nginx
+    image: qunis/ahub_nginx
     ports:
       - "80:80"
       - "443:443"
@@ -29,7 +31,7 @@ services:
       placement:
         constraints: [node.role == manager]
   boss:
-    image: qunis/qaf_boss
+    image: qunis/ahub_boss
     ports:
       - "8001:8001"
     depends_on:

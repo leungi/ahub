@@ -11,8 +11,8 @@ pkgs <- c('tidyverse',
           #'DT'
           'rapiclient',
           'jsonlite',
-          'httr',
-          'swagger'
+          'httr'
+          #'swagger'
           )
 
 # load packages
@@ -24,7 +24,7 @@ source('init.R')
 
 ### creating custom logo object
 custom_logo <- shinyDashboardLogoDIY(
-    boldText = "QAF",
+    boldText = "AHUB",
     mainText = "",
     textSize = 16,
     badgeText = "ALPHA",
@@ -52,6 +52,11 @@ sidebar <- dashboardSidebar(sidebarMenu(
     menuItem(
         "Node 2",
         tabName = "node2",
+        icon = icon("globe")
+    ),
+    menuItem(
+        "Node 3",
+        tabName = "node3",
         icon = icon("globe")
     ),
     menuItem("Logs", tabName = "logs", icon = icon("info-circle")), 
@@ -94,6 +99,14 @@ body <- dashboardBody(
                             )
                         )
                 ),
+        tabItem(tabName = "node3",
+                box(width = 12,
+                       #status = "primary",
+                       title = "Node 3",
+                       htmlOutput('prophetdemo')
+                       #includeHTML('test.html')
+                )
+        ),
         tabItem(tabName = 'logs',
                 box(
                     width = 12,
@@ -121,7 +134,7 @@ body <- dashboardBody(
 
 
 shinyUI(
-    dashboardPage(header, sidebar, body, title = 'QAF')
+    dashboardPage(header, sidebar, body, title = 'AHUB by QUNIS')
 )
 
 

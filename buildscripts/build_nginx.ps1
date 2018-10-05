@@ -1,6 +1,5 @@
 # build all images and push to registry
 
-docker build -t qunis/qaf_nginx ./nginx
-docker push qunis/qaf_nginx
+docker build -t qunis/ahub_nginx ../modules/nginx
+docker push qunis/ahub_nginx
 
-docker stack deploy -c .\docker-compose.yml qaf

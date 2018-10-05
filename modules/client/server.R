@@ -5,16 +5,24 @@ server <- function(input, output, session){
     logcontent <- reactiveVal(NULL)
     err <- reactiveVal(NULL)
     
+    output$prophetdemo <- renderUI({
+        if(apis_fetched){
+            tags$iframe(srcdoc=HTML(as.character(node3$content)),
+                           width='100%', height='500px', seamless=NA) 
+        }
+    })
+    
     output$swaggerlink1 <- renderUI({
         if(apis_fetched){
-            a(href = node1$swagger_url, target="_blank", 'Goto to Swagger UI')
+            a(href = node1$swagger_url, target="_blank", 'Goto Swagger UI')
         }
     })
     
     observeEvent(input$logrefresh, {
-        loglines <- read_lines('../process.log') %>% 
-            sort(decreasing = T) %>% 
-            head(20) 
+        #loglines <- read_lines('../process.log') %>% 
+        #    sort(decreasing = T) %>% 
+        #    head(20) 
+        loglines <- "Log read from database not implemented yet."
         logcontent(loglines)
     })
     
