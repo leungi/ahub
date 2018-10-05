@@ -1,7 +1,7 @@
 # Introduction 
 AHUB is a framework for deploying analytical application inside docker containers.
 
-![alt]('figures/framework_overview.png')
+![alt](figures/framework_overview.png)
 
 The framework aims at providing a unified approach to run scripts in any language (R, Python, etc...) while offering common services for most deployment scenarios:
 
@@ -26,9 +26,11 @@ Alternatively on Windows you can just use the Powershell script *deploy.ps* in t
 
 The docker daemon then loads all images from the public image registry at [docker hub](https://hub.docker.com) and starts all services.
 
-You can test the deployed application at http://localhost/ to access the GUI. As the SSL certificate if self-signed, you need to skip the browser warning. The user credentials for the basic authentication are:
+You can test the deployed application at http://localhost/ to access the GUI. As the SSL certificate if self-signed, you need to skip the browser warning. 
 
 ![SSL warning](figures/sslwarning.png)
+
+The user credentials for the basic authentication are:
 
 **Username:** ahub
 
