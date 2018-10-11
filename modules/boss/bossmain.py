@@ -1,15 +1,18 @@
+import pandas as pd
 from flask import Flask, request
+from flasgger import Swagger
 from redis import Redis, RedisError
 import datetime
-import pandas as pd
+
 import json
 import logging
 
 app = Flask(__name__)
-bossport = 8003
+swagger = Swagger(app)
+bossport = 8001
 
 # Connect to Redis
-redishost = "localhost"
+redishost = "redis"
 redis = Redis(host=redishost, db=0, socket_connect_timeout=2, socket_timeout=2)
 
 
@@ -65,6 +68,12 @@ def pid_log(pid, msg, level='INFO'):
 
 @app.route("/pid_log")
 def pid_log_api():
+    """Get log for a specific process
+        ---
+        parameters:
+          - name: pid
+        """
+
     pid = request.args.get('pid')
     msg = request.args.get('msg')
     level = request.args.get('level')
@@ -199,6 +208,7 @@ def get_pid_log(pid):
     ans = redis.lrange('log:' + str(pid), 0, -1)
     return decode_list(ans)
 
+
 @app.route("/get_pid_log")
 def get_pid_log_api():
     pid = request.args.get('pid')
@@ -206,6 +216,7 @@ def get_pid_log_api():
         return json.dumps({'error': 'please provide pid'})
     else:
         return json.dumps(get_pid_log(pid))
+
 
 # get_pid_log(1001)
 
@@ -225,7 +236,10 @@ def cleanup_pids():
     return n
 
 
-# cleanup_pids()
+@app.route("/cleanup_pids")
+def cleanup_pids_api():
+    return json.dumps(cleanup_pids())
+
 
 # %%
 
@@ -238,7 +252,11 @@ def get_all_pids():
     return ans
 
 
-# get_all_pids()
+@app.route("/get_all_pids")
+def get_all_pids_api():
+    return json.dumps(get_all_pids())
+
+
 # %%
 
 # retrieve all logs
@@ -248,16 +266,17 @@ def get_all_logs():
     for process_name in piddict.keys():
         for pid in piddict[process_name]:
             log = get_pid_log(pid)
-            logslist.append(pd.DataFrame({'log': log, 'pid': pid, 'process_name': process_name}))
+            logslist.append(pd.DataFrame({'log': log, 'pid': pid, 'logitem': list(range(len(log))), 'process_name': process_name}))
 
     ans = pd.concat(logslist)
-    seq = ['process_name', 'pid', 'log']
+    seq = ['process_name', 'pid', 'logitem', 'log']
     ans = ans.reindex(columns=seq)
     return ans
 
 
-# get_all_logs()
-
+@app.route("/get_all_logs")
+def get_all_logs_api():
+    return get_all_logs().to_json(orient='records')
 
 # %%
 

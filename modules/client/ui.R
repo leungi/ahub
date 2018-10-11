@@ -80,31 +80,31 @@ body <- dashboardBody(
                         actionButton('exec_thread1', 'Run thread operation'),
                         verbatimTextOutput('result1')
                         ),
-                    tabPanel('Load test',
-                        p('Load test')
+                    tabPanel('Swagger',
+                        htmlOutput('swaggernode1')
                         )
                     )
                 ),
         tabItem(tabName = "node2",
                 tabBox(width = 12,
-                       #status = "primary",
-                       title = "Node 2",
-                       tabPanel('Single execution',
-                                actionButton('exec_batch2', 'Run batch operation'),
-                                actionButton('exec_thread2', 'Run thread operation'),
-                                verbatimTextOutput('result2')
-                            ),
-                       tabPanel('Load test',
-                                p('Load test')
-                            )
+                   #status = "primary",
+                   title = "Node 2",
+                   tabPanel('Single execution',
+                            actionButton('exec_batch2', 'Run batch operation'),
+                            actionButton('exec_thread2', 'Run thread operation'),
+                            verbatimTextOutput('result2')
+                        ),
+                   tabPanel('Swagger',
+                        htmlOutput('swaggernode1')
                         )
+                    )
                 ),
         tabItem(tabName = "node3",
                 box(width = 12,
-                       #status = "primary",
-                       title = "Node 3",
-                       htmlOutput('prophetdemo')
-                       #includeHTML('test.html')
+                   #status = "primary",
+                   title = "Node 3",
+                   htmlOutput('prophetdemo')
+                   #includeHTML('test.html')
                 )
         ),
         tabItem(tabName = 'logs',

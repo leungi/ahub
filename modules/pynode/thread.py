@@ -2,7 +2,7 @@ import threading
 import json
 from datetime import datetime
 import time
-from bossclient import Boss
+from .bossclient import Boss
 
 myboss = Boss('localhost', 8002)
 

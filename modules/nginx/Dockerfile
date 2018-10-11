@@ -9,4 +9,4 @@ RUN apt-get update && \
 		-out /etc/nginx/server.crt && \
 	service nginx start
 	
-ADD nginx.conf /etc/nginx/
+# ADD nginx.conf /etc/nginx/

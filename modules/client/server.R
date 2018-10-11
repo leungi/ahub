@@ -5,9 +5,17 @@ server <- function(input, output, session){
     logcontent <- reactiveVal(NULL)
     err <- reactiveVal(NULL)
     
+    
+    output$swagger1 <- renderUI({
+        if(apis_fetched){
+            tags$iframe(srcdoc=HTML(as.character(GET(node1$swagger_url) %>% content)),
+                        width='100%', height='500px', seamless=NA) 
+        }
+    })
+    
     output$prophetdemo <- renderUI({
         if(apis_fetched){
-            tags$iframe(srcdoc=HTML(as.character(node3$content)),
+            tags$iframe(srcdoc=HTML(as.character(GET(node2$swagger_url) %>% content)),
                            width='100%', height='500px', seamless=NA) 
         }
     })

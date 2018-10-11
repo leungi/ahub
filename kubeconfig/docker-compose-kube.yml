@@ -1,6 +1,6 @@
-version: '3.3'
+version: '3'
 services:
-
+  
 # -------------------------------------------
   node1:
     image: qunis/ahub_rnode
@@ -24,27 +24,27 @@ services:
   
 # -------------------------------------------
   nginx:
-    image: nginx
+    image: qunis/ahub_nginx
     ports:
       - "80:80"
       - "443:443"
-    configs:
-      - source: nginx.conf
-        target: /etc/nginx/nginx.conf
-    secrets:
-      - source: server.crt
-        target: server.crt
-      - source: server.key
-        target: server.key
-      - source: htpasswd
-        target: .htpasswd
+    # configs:
+      # - source: nginx.conf
+        # target: /etc/nginx/nginx.conf
+    # secrets:
+      # - source: server.crt
+        # target: server.crt
+      # - source: server.key
+        # target: server.key
+      # - source: htpasswd
+        # target: .htpasswd
 # -------------------------------------------
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
     volumes:
-       - "./redisdata:/data"
+       - "$pwd/redisdata:/data"
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -79,16 +79,16 @@ services:
 # -------------------------------------------
 # -------------------------------------------
         
-configs:
-  nginx.conf:
-    file: ./configs/nginx.conf
+# configs:
+  # nginx.conf:
+    # file: ./configs/nginx.conf
 
-secrets:
-  server.crt:
-    file: ./configs/server.crt
-  server.key:
-    file: ./configs/server.key
-  htpasswd:
-    file: ./configs/.htpasswd
+# secrets:
+  # server.crt:
+    # file: ./configs/server.crt
+  # server.key:
+    # file: ./configs/server.key
+  # htpasswd:
+    # file: ./configs/.htpasswd
 
 
