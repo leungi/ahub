@@ -1,0 +1,250 @@
+[
+    {
+        "Id": "4089ae377dccfcfdda3db7756b4d8854717638ac601d79cd9a4dff1f63073c3a",
+        "Created": "2018-10-10T08:54:38.24781669Z",
+        "Path": "/swarm",
+        "Args": [
+            "manage",
+            "--replication",
+            "--advertise",
+            "172.16.0.5:2375",
+            "--discovery-opt",
+            "kv.path=docker/nodes",
+            "consul://172.16.0.5:8500"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 74157,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2018-10-10T08:54:39.321617161Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:ff454b4a0e84e50c50e3df457ad44b80f1a67ec6ec75cff5117dd5dc46bf4965",
+        "ResolvConfPath": "/var/lib/docker/containers/4089ae377dccfcfdda3db7756b4d8854717638ac601d79cd9a4dff1f63073c3a/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/4089ae377dccfcfdda3db7756b4d8854717638ac601d79cd9a4dff1f63073c3a/hostname",
+        "HostsPath": "/var/lib/docker/containers/4089ae377dccfcfdda3db7756b4d8854717638ac601d79cd9a4dff1f63073c3a/hosts",
+        "LogPath": "/var/lib/docker/containers/4089ae377dccfcfdda3db7756b4d8854717638ac601d79cd9a4dff1f63073c3a/4089ae377dccfcfdda3db7756b4d8854717638ac601d79cd9a4dff1f63073c3a-json.log",
+        "Name": "/containers_swarm_1",
+        "RestartCount": 0,
+        "Driver": "aufs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/etc/docker:/etc/docker:rw"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "default",
+            "PortBindings": {
+                "2375/tcp": [
+                    {
+                        "HostIp": "",
+                        "HostPort": "2375"
+                    }
+                ]
+            },
+            "RestartPolicy": {
+                "Name": "always",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "CapAdd": null,
+            "CapDrop": null,
+            "Dns": [],
+            "DnsOptions": [],
+            "DnsSearch": [],
+            "ExtraHosts": null,
+            "GroupAdd": null,
+            "IpcMode": "shareable",
+            "Cgroup": "",
+            "Links": [
+                "/containers_consul_1:/containers_swarm_1/consul",
+                "/containers_consul_1:/containers_swarm_1/consul_1",
+                "/containers_consul_1:/containers_swarm_1/containers_consul_1"
+            ],
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": false,
+            "SecurityOpt": null,
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 0,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": [],
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": [],
+            "DeviceCgroupRules": null,
+            "DiskQuota": 0,
+            "KernelMemory": 0,
+            "MemoryReservation": 0,
+            "MemorySwap": 0,
+            "MemorySwappiness": null,
+            "OomKillDisable": false,
+            "PidsLimit": 0,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/asound",
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": null,
+            "Name": "aufs"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/etc/docker",
+                "Destination": "/etc/docker",
+                "Mode": "rw",
+                "RW": true,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "volume",
+                "Name": "ddd10045a42e217f535346ce6a7495073bb12d9aa18cac584b1f40d1e55a121d",
+                "Source": "/var/lib/docker/volumes/ddd10045a42e217f535346ce6a7495073bb12d9aa18cac584b1f40d1e55a121d/_data",
+                "Destination": "/.swarm",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "a36b30cc1691",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": false,
+            "AttachStderr": false,
+            "ExposedPorts": {
+                "2375/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "SWARM_HOST=:2375"
+            ],
+            "Cmd": [
+                "manage",
+                "--replication",
+                "--advertise",
+                "172.16.0.5:2375",
+                "--discovery-opt",
+                "kv.path=docker/nodes",
+                "consul://172.16.0.5:8500"
+            ],
+            "Image": "swarm:latest",
+            "Volumes": {
+                "/.swarm": {}
+            },
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/swarm"
+            ],
+            "OnBuild": null,
+            "Labels": {}
+        },
+        "NetworkSettings": {
+            "Bridge": "",
+            "SandboxID": "6d981988ec3f92aff3fab764444f940a0ff3646835bcf710153d35945b27a43d",
+            "HairpinMode": false,
+            "LinkLocalIPv6Address": "",
+            "LinkLocalIPv6PrefixLen": 0,
+            "Ports": {
+                "2375/tcp": [
+                    {
+                        "HostIp": "0.0.0.0",
+                        "HostPort": "2375"
+                    }
+                ]
+            },
+            "SandboxKey": "/var/run/docker/netns/6d981988ec3f",
+            "SecondaryIPAddresses": null,
+            "SecondaryIPv6Addresses": null,
+            "EndpointID": "5f6f4d5b84a06c6f39e17e444c19c96f78ca0caf267b13dfb64074e6fb2620a5",
+            "Gateway": "172.17.0.1",
+            "GlobalIPv6Address": "",
+            "GlobalIPv6PrefixLen": 0,
+            "IPAddress": "172.17.0.3",
+            "IPPrefixLen": 16,
+            "IPv6Gateway": "",
+            "MacAddress": "02:42:ac:11:00:03",
+            "Networks": {
+                "bridge": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": null,
+                    "NetworkID": "4684dba88070338244303fe9f8c825760d29fe3e22f7515a05a1680dca2a494b",
+                    "EndpointID": "5f6f4d5b84a06c6f39e17e444c19c96f78ca0caf267b13dfb64074e6fb2620a5",
+                    "Gateway": "172.17.0.1",
+                    "IPAddress": "172.17.0.3",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "MacAddress": "02:42:ac:11:00:03",
+                    "DriverOpts": null
+                }
+            }
+        }
+    }
+]

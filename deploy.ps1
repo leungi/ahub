@@ -1,1 +1,1 @@
-docker stack deploy -c .\docker-compose.yml ahub
+docker stack deploy -c ahub.yml ahub

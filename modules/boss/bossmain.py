@@ -1,22 +1,63 @@
 import pandas as pd
-from flask import Flask, request
+from flask import Flask, request, Response
 from flasgger import Swagger
 from redis import Redis, RedisError
+from itertools import compress
+import requests
+import docker
 import datetime
-
+import re
 import json
 import logging
 
+debug = False
+
+
+# init Flask and set JSON as default response
+class JSONResponse(Response):
+    default_mimetype = 'application/json'
+
 app = Flask(__name__)
-swagger = Swagger(app)
-bossport = 8001
+app.response_class = JSONResponse
+
+# Configure Swagger
+SWAGGER_CONFIG = {
+        "headers": [],
+        "specs": [
+            {
+                "endpoint": 'swagger',
+                "route": '/swagger.json',
+                "rule_filter": lambda rule: True,  # all in
+                "model_filter": lambda tag: True,  # all in
+            }
+        ],
+        "static_url_path": "/flasgger_static",
+        # "static_folder": "static",  # must be set by user
+        "swagger_ui": True,
+        "specs_route": "/__swagger__/"
+    }
+
+swagger = Swagger(app, config=SWAGGER_CONFIG)
+bossport = 8000
+
+
+# set hostnames
+if(debug):
+    redishost = 'ahub.westeurope.cloudapp.azure.com'
+    dockerhost = 'localhost:2376'
+    nginxhost = 'ahub.westeurope.cloudapp.azure.com'
+else:
+    redishost = "redis"
+    dockerhost = 'unix://var/run/docker.sock'
+    nginxhost = 'nginx'
 
 # Connect to Redis
-redishost = "redis"
 redis = Redis(host=redishost, db=0, socket_connect_timeout=2, socket_timeout=2)
 
+# Connect to docker
+client = docker.DockerClient(base_url=dockerhost)
 
-# %%
+
 
 def get_current_time():
     return datetime.datetime.now().strftime("%Y%m%d%H%M%S.%f")[:-3]
@@ -59,6 +100,51 @@ class RedisLogger(object):
 
 # %%
 
+@app.route("/get_redis_status")
+def redis_status():
+    """get_redis_status
+        ---
+        parameters: []
+        """
+    try:
+        redis.incr("counter")
+        return json.dumps({'online': True})
+    except RedisError:
+        return json.dumps({'online': False})
+
+def get_services():
+    """Gives all active services on the docker swarm host and the nodes which have swagger compliant apis"""
+    try:
+        raw = [service.name for service in client.services.list()]
+        services = [re.split(r'_', s)[1] for s in raw]
+        swagger_resp = []
+        for s in services:
+            try:
+                r = requests.get('http://{0}:8000/{1}/swagger.json'.format(nginxhost, s), timeout=.1)
+            except Exception as err:
+                swagger_resp.append(False)
+            else:
+                if r.status_code == 200:
+                    swagger_resp.append(True)
+                else:
+                    swagger_resp.append(False)
+        apis = list(compress(services, swagger_resp))
+
+    except Exception as err:
+        return {'error': format(err)}
+    else:
+        return {'services': services,
+                'apis': apis}
+
+@app.route("/get_services")
+def get_services_api():
+    """get_services
+        ---
+        parameters: []
+        """
+    return json.dumps(get_services())
+
+
 def pid_log(pid, msg, level='INFO'):
     log = RedisLogger('redislog', pid).get()
     print('writing message {0}'.format(msg))
@@ -68,12 +154,19 @@ def pid_log(pid, msg, level='INFO'):
 
 @app.route("/pid_log")
 def pid_log_api():
-    """Get log for a specific process
+    """pid_log
         ---
         parameters:
           - name: pid
+            in: query
+            required: true
+          - name: msg
+            in: query
+            required: true
+          - name: level
+            in: query
+            required: false
         """
-
     pid = request.args.get('pid')
     msg = request.args.get('msg')
     level = request.args.get('level')
@@ -106,6 +199,10 @@ def get_pid(process_name):
 
 @app.route("/get_pid")
 def get_pid_api():
+    """get_pid
+        ---
+        parameters: []
+        """
     process_name = request.args.get('process_name')
     if not process_name:
         return json.dumps({'error': 'please provide process name'})
@@ -153,6 +250,13 @@ def create_pid(process_name):
 
 @app.route("/create_pid")
 def create_pid_api():
+    """create_pid
+        ---
+        parameters:
+          - name: process_name
+            in: query
+            required: true
+        """
     process_name = request.args.get('process_name')
     if not process_name:
         return json.dumps({'error': 'please provide process name'})
@@ -173,6 +277,13 @@ def get_pid_info(pid):
 
 @app.route("/get_pid_info")
 def get_pid_info_api():
+    """get_pid_info
+        ---
+        parameters:
+          - name: pid
+            in: query
+            required: true
+        """
     pid = request.args.get('pid')
     if not pid:
         return json.dumps({'error': 'please provide pid'})
@@ -191,6 +302,16 @@ def set_pid_status(pid, status):
 
 @app.route("/set_pid_status")
 def set_pid_status_api():
+    """set_pid_status
+        ---
+        parameters:
+          - name: pid
+            in: query
+            required: true
+          - name: status
+            in: query
+            required : true
+        """
     pid = request.args.get('pid')
     status = request.args.get('status')
     if not pid:
@@ -211,6 +332,13 @@ def get_pid_log(pid):
 
 @app.route("/get_pid_log")
 def get_pid_log_api():
+    """get_pid_log
+        ---
+        parameters:
+          - name: pid
+            in: query
+            required: true
+        """
     pid = request.args.get('pid')
     if not pid:
         return json.dumps({'error': 'please provide pid'})
@@ -238,6 +366,10 @@ def cleanup_pids():
 
 @app.route("/cleanup_pids")
 def cleanup_pids_api():
+    """cleanup_pids
+        ---
+        parameters: []
+        """
     return json.dumps(cleanup_pids())
 
 
@@ -254,6 +386,10 @@ def get_all_pids():
 
 @app.route("/get_all_pids")
 def get_all_pids_api():
+    """get_all_pids
+        ---
+        parameters: []
+        """
     return json.dumps(get_all_pids())
 
 
@@ -276,6 +412,10 @@ def get_all_logs():
 
 @app.route("/get_all_logs")
 def get_all_logs_api():
+    """get_all_logs
+        ---
+        parameters: []
+        """
     return get_all_logs().to_json(orient='records')
 
 # %%

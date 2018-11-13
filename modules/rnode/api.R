@@ -12,7 +12,7 @@ plan(multisession)
 
 # Connect to redis
 source('redis_functions.R')
-redissrv <- ifelse(interactive(), 'localhost', 'redis')
+redissrv <- ifelse(interactive(), 'ahub.westeurope.cloudapp.azure.com', 'redis')
 rediscon <- try(redisConnect(host=redissrv, returnRef = T), silent=T)
 # init pid if not exists
 redisSet('next_pid', charToRaw('1000'), NX =TRUE)

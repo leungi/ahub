@@ -1,29 +1,50 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: C:\ProgramData\chocolatey\lib\kubernetes-kompose\tools\kompose.exe
-      convert -f .\docker-compose-kube.yml
-    kompose.version: 1.16.0 (0c01309)
-  creationTimestamp: null
   labels:
-    io.kompose.service: nginx
+    deployment: nginx
   name: nginx
 spec:
   replicas: 1
   strategy: {}
   template:
     metadata:
-      creationTimestamp: null
       labels:
-        io.kompose.service: nginx
+        deployment: nginx
     spec:
       containers:
-      - image: qunis/ahub_nginx
+      - image: nginx:latest
         name: nginx
         ports:
         - containerPort: 80
         - containerPort: 443
-        resources: {}
+        volumeMounts:
+          - mountPath: /etc/nginx
+            name: config
       restartPolicy: Always
-status: {}
+      volumes:
+        - name: config
+          configMap:
+            name: nginx-config
+            items:
+            - key: nginx-config
+              path: nginx.conf
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    deployment: nginx
+  name: nginx
+spec:
+  ports:
+  - name: "80"
+    port: 80
+    targetPort: 80
+  - name: "443"
+    port: 443
+    targetPort: 443
+  selector:
+    deployment: nginx
+  type: LoadBalancer

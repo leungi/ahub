@@ -6,25 +6,25 @@ server <- function(input, output, session){
     err <- reactiveVal(NULL)
     
     
-    output$swagger1 <- renderUI({
-        if(apis_fetched){
-            tags$iframe(srcdoc=HTML(as.character(GET(node1$swagger_url) %>% content)),
-                        width='100%', height='500px', seamless=NA) 
-        }
-    })
-    
-    output$prophetdemo <- renderUI({
-        if(apis_fetched){
-            tags$iframe(srcdoc=HTML(as.character(GET(node2$swagger_url) %>% content)),
-                           width='100%', height='500px', seamless=NA) 
-        }
-    })
-    
-    output$swaggerlink1 <- renderUI({
-        if(apis_fetched){
-            a(href = node1$swagger_url, target="_blank", 'Goto Swagger UI')
-        }
-    })
+    # output$swagger1 <- renderUI({
+    #     if(apis_fetched){
+    #         tags$iframe(srcdoc=HTML(as.character(GET(node1$swagger_url) %>% content)),
+    #                     width='100%', height='500px', seamless=NA) 
+    #     }
+    # })
+    # 
+    # output$prophetdemo <- renderUI({
+    #     if(apis_fetched){
+    #         tags$iframe(srcdoc=HTML(as.character(GET(node2$swagger_url) %>% content)),
+    #                        width='100%', height='500px', seamless=NA) 
+    #     }
+    # })
+    # 
+    # output$swaggerlink1 <- renderUI({
+    #     if(apis_fetched){
+    #         a(href = node1$swagger_url, target="_blank", 'Goto Swagger UI')
+    #     }
+    # })
     
     observeEvent(input$logrefresh, {
         #loglines <- read_lines('../process.log') %>% 
@@ -35,38 +35,38 @@ server <- function(input, output, session){
     })
     
     observeEvent(input$exec_batch1, {
-        if(apis_fetched){ # only when operations are fetched
-            response <- node1$ops[[1]]()
+        if(is.null(node_api[[1]]$errmsg)){ # only when operations are fetched
+            response <- node_api[[1]]$ops[[1]]()
             ans1(httr::content(response))    
         }else{
-            err(errmsg)
+            err(node_api[[1]]$errmsg)
         }
     })
     
     observeEvent(input$exec_thread1, {
-        if(apis_fetched){ # only when operations are fetched
-            response <- node1$ops[[2]]()
+        if(is.null(node_api[[1]]$errmsg)){ # only when operations are fetched
+            response <- node_api[[1]]$ops[[2]](t = .001)
             ans1(httr::content(response))    
         }else{
-            err(errmsg)
+            err(node_api[[1]]$errmsg)
         }
     })
     
     observeEvent(input$exec_batch2, {
-        if(apis_fetched){ # only when operations are fetched
-            response <- node2$ops[[1]]()
+        if(is.null(node_api[[2]]$errmsg)){ # only when operations are fetched
+            response <- node_api[[2]]$ops[[1]]()
             ans2(httr::content(response))    
         }else{
-            err(errmsg)
+            err(node_api[[2]]$errmsg)
         }
     })
     
     observeEvent(input$exec_thread2, {
-        if(apis_fetched){ # only when operations are fetched
-            response <- node2$ops[[2]]()
+        if(is.null(node_api[[2]]$errmsg)){ # only when operations are fetched
+            response <- node_api[[2]]$ops[[2]](t = .001)
             ans2(httr::content(response))    
         }else{
-            err(errmsg)
+            err(node_api[[2]]$errmsg)
         }
     })
     
@@ -106,4 +106,4 @@ server <- function(input, output, session){
     
 }
 
-shinyServer(server)
+

@@ -19,8 +19,8 @@ services:
   node3:
     image: qunis/prophetdemo
 # -------------------------------------------
-  client:
-    image: qunis/ahub_client
+  gui:
+    image: qunis/ahub_gui
   
 # -------------------------------------------
   nginx:
@@ -28,6 +28,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+      - "8000:8000" #only for debugging, have to close in production
+    volumes:
+      - "/etc/letsencrypt:/etc/letsencrypt"
     configs:
       - source: nginx.conf
         target: /etc/nginx/nginx.conf
@@ -38,21 +41,24 @@ services:
         target: server.key
       - source: htpasswd
         target: .htpasswd
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 # -------------------------------------------
   redis:
     image: redis:alpine
     ports:
       - "6379:6379"
     volumes:
-       - "./redisdata:/data"
+      - "/redisdata:/data"
     deploy:
       placement:
         constraints: [node.role == manager]
 # -------------------------------------------
   boss:
     image: qunis/ahub_boss
-    ports:
-      - "8001:8001"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
     depends_on:
       - redis
 # -------------------------------------------

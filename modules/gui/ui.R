@@ -2,24 +2,23 @@
 
 # Define packages
 pkgs <- c('tidyverse',
-          #'plotly',
-          #'RColorBrewer',
           'shiny',
           'shinyjs',
           'shinydashboard',
           'dashboardthemes',
-          #'DT'
           'rapiclient',
           'jsonlite',
           'httr'
-          #'swagger'
           )
 
 # load packages
 loadflag <- sapply(pkgs, require, character.only = T, quietly = T)
 
 source('functions.R')
+
+
 source('init.R')
+
 
 
 ### creating custom logo object
@@ -81,7 +80,7 @@ body <- dashboardBody(
                         verbatimTextOutput('result1')
                         ),
                     tabPanel('Swagger',
-                        htmlOutput('swaggernode1')
+                        p()
                         )
                     )
                 ),
@@ -95,7 +94,7 @@ body <- dashboardBody(
                             verbatimTextOutput('result2')
                         ),
                    tabPanel('Swagger',
-                        htmlOutput('swaggernode1')
+                        p()
                         )
                     )
                 ),

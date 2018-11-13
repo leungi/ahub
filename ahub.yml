@@ -1,0 +1,94 @@
+version: '3.3'
+services:
+
+# -------------------------------------------
+  node1:
+    image: qunis/ahub_rnode
+    deploy:
+      replicas: 1
+    depends_on:
+     - redis
+# -------------------------------------------
+  node2:
+    image: qunis/ahub_rnode 
+    deploy:
+      replicas: 1
+    depends_on:
+     - redis
+# -------------------------------------------
+  node3:
+    image: qunis/prophetdemo
+# -------------------------------------------
+  client:
+    image: qunis/ahub_client
+  
+# -------------------------------------------
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    configs:
+      - source: nginx.conf
+        target: /etc/nginx/nginx.conf
+    secrets:
+      - source: server.crt
+        target: server.crt
+      - source: server.key
+        target: server.key
+      - source: htpasswd
+        target: .htpasswd
+# -------------------------------------------
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+       - "/redisdata:/data"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+# -------------------------------------------
+  boss:
+    image: qunis/ahub_boss
+    ports:
+      - "8001:8001"
+    depends_on:
+      - redis
+# -------------------------------------------
+  visualizer:
+    image: dockersamples/visualizer:stable
+    ports:
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+# -------------------------------------------
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9000:9000"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+# -------------------------------------------
+# -------------------------------------------
+        
+configs:
+  nginx.conf:
+    file: ./configs/nginx.conf
+
+secrets:
+  server.crt:
+    file: ./configs/server.crt
+  server.key:
+    file: ./configs/server.key
+  htpasswd:
+    file: ./configs/.htpasswd
+
+

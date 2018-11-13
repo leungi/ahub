@@ -1,0 +1,82 @@
+
+
+
+get_node_api <-
+    function(dir = 'node1',
+             host = 'localhost',
+             port = '8000',
+             uid = NULL,
+             pwd = NULL) {
+        
+        scheme <- ifelse(port == 443, 'https', 'http')
+        
+        auth <- ifelse(is.null(uid), "", glue::glue('{uid}:{pwd}@'))
+        
+        response <- try(
+            GET(url=glue::glue("{scheme}://{auth}{host}:{port}/{dir}/swagger.json")) 
+        )
+        
+        if(!inherits(response, 'try-error')){
+            if(response$status_code==200){
+                swagger <-  response %>% content()
+                swagger_url <- glue::glue("{scheme}://{auth}{host}:{port}/{dir}/__swagger__/")
+                
+                # exchange hostname and paths in swagger definition
+                swagger$host <- paste0(host, ":", port)
+                names(swagger$paths) <- paste0('/', dir, names(swagger$paths))
+                swagger$schemes <- list(scheme)
+                
+                # get api definition from swagger
+                api <- get_api(toJSON(swagger))
+                
+                # extract valid operations
+                if(length(auth)){
+                    ops <- get_operations(api,
+                                   .headers = c("Authorization" = paste(
+                                       "Basic", glue::glue("{uid}:{pwd}") %>% base64_enc()
+                                   )))
+                }else{
+                    ops <- get_operations(api)
+                }
+            
+                return(list(api = api,
+                            ops = ops,
+                            swagger= swagger,
+                            swagger_url = swagger_url))
+            }else{
+                return(list(errmsg = response$status_code))
+            }
+        }else{
+            return(list(errmsg = response[[1]]))
+        }
+    }
+
+
+get_node_html <- 
+    function(dir = 'node1',
+             host = 'localhost',
+             port = '8000',
+
+             uid = NULL,
+             pwd = NULL) {
+        scheme <- ifelse(port == 443, 'https', 'http')
+        auth <- ifelse(is.null(uid), "", glue::glue('{uid}:{pwd}@'))
+        response <- try(
+            GET(url=glue::glue("{scheme}://{auth}{host}:{port}/{dir}/")) 
+        )
+        
+        if(!inherits(response, 'try-error')){
+            if(response$status_code == 200){
+                return(list(content = response %>% content()))
+            }else{
+                return(list(errmsg = response$status_code))
+            }
+        }else{
+            return(list(errmsg = response[[1]]))
+        }
+        
+}
+
+#swagger <- GET(url=glue::glue("{protocol}://{uid}:{pwd}@{host}:{port}/{dir}/swagger.json")) %>% content() 
+
+

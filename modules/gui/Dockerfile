@@ -2,16 +2,10 @@ FROM rocker/tidyverse
 
 # install R packages
 RUN install2.r \
-#   odbc \
-#   leaflet \
-#    plotly \
-#    htmltools \
     shiny \
     shinyjs \
-#   RColorBrewer \
-#   DT \
     shinydashboard \
-	rapiclient && \
+    rapiclient && \
     R -e 'devtools::install_github("nik01010/dashboardthemes")'
 
 # install shiny server
@@ -28,10 +22,14 @@ RUN apt-get update && apt-get install -y \
     wget --no-verbose "https://download3.rstudio.org/ubuntu-14.04/x86_64/shiny-server-$VERSION-amd64.deb" -O ss-latest.deb && \
     gdebi -n ss-latest.deb && \
     rm -f version.txt ss-latest.deb
-	
+
 ADD . /srv/shiny-server
 WORKDIR /srv/shiny-server
 
-EXPOSE 80
+#ADD . /app
+#WORKDIR /app
+
+EXPOSE 3838
 
 CMD shiny-server
+#CMD R -e "shiny::runApp(host='0.0.0.0', port=3838)"
