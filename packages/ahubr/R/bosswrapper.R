@@ -98,3 +98,16 @@ pid_log <- function(msg, level = "INFO"){
     }
 }
 
+
+#' Title
+#'
+#' @param envir
+#'
+#' @return
+#' @export
+#'
+#' @examples
+get_current_pid <- function(envir){
+    get("pid", envir = envir)
+}
+

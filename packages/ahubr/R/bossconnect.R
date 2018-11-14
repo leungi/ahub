@@ -5,7 +5,7 @@
 
 .ahubEnv <- new.env()
 
-.ahubEnv$debug <- TRUE
+.ahubEnv$debug <- FALSE
 
 .ahubEnv$debughost <- 'ahub.westeurope.cloudapp.azure.com'
 .ahubEnv$boss_init <- FALSE
@@ -44,14 +44,3 @@ init_boss_api <- function(
     }
 
 
-#' Title
-#'
-#' @param envir
-#'
-#' @return
-#' @export
-#'
-#' @examples
-get_current_pid <- function(envir){
-    get("pid", envir = envir)
-}
