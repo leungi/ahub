@@ -12,7 +12,6 @@ import logging
 
 debug = False
 
-
 # init Flask and set JSON as default response
 class JSONResponse(Response):
     default_mimetype = 'application/json'
@@ -201,7 +200,10 @@ def get_pid(process_name):
 def get_pid_api():
     """get_pid
         ---
-        parameters: []
+        parameters:
+            - name: process_name
+              in: query
+              required: true
         """
     process_name = request.args.get('process_name')
     if not process_name:
