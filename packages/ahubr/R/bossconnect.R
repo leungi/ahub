@@ -8,6 +8,7 @@
 .ahubEnv$debug <- FALSE
 
 .ahubEnv$debughost <- 'ahub.westeurope.cloudapp.azure.com'
+.ahubEnv$host <- 'nginx'
 .ahubEnv$boss_init <- FALSE
 .ahubEnv$redis_init <- FALSE
 .ahubEnv$future_init <- FALSE
@@ -23,7 +24,7 @@
 #'
 #' @examples
 init_boss_api <- function(
-    host = ifelse(.ahubEnv$debug, .ahubEnv$debughost, 'nginx'),
+    host = ifelse(.ahubEnv$debug, .ahubEnv$debughost, .ahubEnv$host),
     port = 8000
     ){
     if(!.ahubEnv$boss_init){

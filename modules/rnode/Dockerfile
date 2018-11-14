@@ -1,4 +1,4 @@
-FROM rocker/tidyverse
+FROM rocker/r-base
 
 # dependencies for plumber
 RUN apt-get update -qq && apt-get install -y \
@@ -8,7 +8,9 @@ RUN apt-get update -qq && apt-get install -y \
   apt-get clean
 
 # additional R packages
-RUN install2.r plumber future futile.logger rredis glue lubridate
+RUN install2.r plumber
+
+RUN R -e "devtools::install_github('qunis/ahub', 'dev', 'packages/ahubr')"
 
 EXPOSE 8000
 

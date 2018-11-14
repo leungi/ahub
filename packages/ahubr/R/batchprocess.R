@@ -19,11 +19,12 @@
 daily_batch_process <- function(myfun,
                               process_name = "test",
                               arglist = list(),
-                              force=F
+                              force=F,
+                              debug = F
                               ) {
     #function(force = F, ...) {
         #process_name <- 'batch' # this name is crucial for process logging and status checking
-
+        if(debug) switch_debug()
         pid <- get_pid(process_name) # get the last process id for this process
         pid_info <- get_pid_info(pid) # get the info to the pid
 
@@ -40,6 +41,7 @@ daily_batch_process <- function(myfun,
                 if (pid_info$status != 'init') pid <- create_pid(process_name)
 
                 f <- future({
+                    if(debug) switch_debug()
                     # init logging
                     pid_log(pid, glue('Process {process_name} started.'))
                     set_pid_status(pid, 'running')
@@ -53,7 +55,7 @@ daily_batch_process <- function(myfun,
                     set_pid_status(pid, 'finished')
                     return(TRUE)
                     }, packages=c("futile.logger", "glue", "ahubr"),
-                    globals = c("pid", "process_name", "myfun", "arglist")
+                    globals = c("pid", "process_name", "myfun", "arglist", "debug")
                 )
                 output <-
                     list(
