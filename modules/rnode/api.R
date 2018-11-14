@@ -15,6 +15,6 @@ batch <- function(force = 0, t = 10) {
         process_name = "batch",
         force = force,
         arglist = list(t = t),
-        debug=T
+        debug=F
     )
 }
