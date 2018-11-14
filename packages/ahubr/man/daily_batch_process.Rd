@@ -5,7 +5,7 @@
 \title{Title}
 \usage{
 daily_batch_process(myfun, process_name = "test", arglist = list(),
-  force = F)
+  force = F, debug = F)
 }
 \arguments{
 \item{arglist}{}

@@ -4,8 +4,8 @@
 \alias{init_boss_api}
 \title{Get the boss api object}
 \usage{
-init_boss_api(host = ifelse(.ahubEnv$debug, .ahubEnv$debughost, "nginx"),
-  port = 8000)
+init_boss_api(host = ifelse(.ahubEnv$debug, .ahubEnv$debughost,
+  .ahubEnv$host), port = 8000)
 }
 \arguments{
 \item{host}{}

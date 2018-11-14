@@ -8,7 +8,7 @@ RUN apt-get update -qq && apt-get install -y \
   apt-get clean
 
 # additional R packages
-RUN install2.r plumber
+RUN install2.r plumber devtools
 
 RUN R -e "devtools::install_github('qunis/ahub', 'dev', 'packages/ahubr')"
 

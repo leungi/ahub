@@ -11,11 +11,10 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     futile.logger,
-    dplyr,
-    rredis,
     rapiclient,
     httr,
     glue,
     jsonlite,
-    future
+    future,
+    magrittr
 RoxygenNote: 6.1.1
