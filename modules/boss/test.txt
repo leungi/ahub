@@ -1,0 +1,92 @@
+worker_processes 1;
+
+events { worker_connections 1024; }
+
+http {
+
+    sendfile on;
+    
+    upstream gui{
+        server gui:3838;
+    }
+
+    upstream boss{
+        server boss:8000;
+    }
+    
+    upstream node1{
+        server node1:8000;
+    }
+    
+    upstream node2{
+        server node2:8000;
+    }
+    
+    upstream node3{
+        server node3:8000;
+    }
+    
+
+    server {
+        listen 80;
+        return 301 https://$host$request_uri;
+    }
+
+    server {
+        listen 443 ssl;
+        ssl_certificate     /etc/letsencrypt/live/ahub.westeurope.cloudapp.azure.com/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/ahub.westeurope.cloudapp.azure.com/privkey.pem;
+        auth_basic          "Username and Password are required";
+        auth_basic_user_file /run/secrets/.htpasswd;
+        
+        location / {
+            proxy_pass         http://gui/;
+            proxy_redirect     http://gui/ $scheme://$host/;
+            proxy_buffering off;
+
+        }
+
+        location /boss/ {
+            proxy_pass          http://boss/;
+            proxy_redirect     http://boss/ /;
+        }
+        location /node1/ {
+            proxy_pass          http://node1/;
+            proxy_redirect     http://node1/ /;
+        }
+        location /node2/ {
+            proxy_pass          http://node2/;
+            proxy_redirect     http://node2/ /;
+        }
+        location /node3/ {
+            proxy_pass          http://node3/;
+            proxy_redirect     http://node3/ /;
+        }
+    }
+    
+    server {
+        listen 8000;
+       
+        location / {
+            proxy_pass         http://gui/;
+            proxy_redirect     http://gui/ $scheme://$host/;
+            proxy_buffering off;
+
+        location /boss/ {
+            proxy_pass          http://boss/;
+            proxy_redirect     http://boss/ /;
+        }
+        location /node1/ {
+            proxy_pass          http://node1/;
+            proxy_redirect     http://node1/ /;
+        }
+        location /node2/ {
+            proxy_pass          http://node2/;
+            proxy_redirect     http://node2/ /;
+        }
+        location /node3/ {
+            proxy_pass          http://node3/;
+            proxy_redirect     http://node3/ /;
+        }
+    }
+}

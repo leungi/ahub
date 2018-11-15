@@ -48,7 +48,7 @@ class Boss:
         else:
             return self._throw_error(ans)
 
-    def log(self, pid, msg):
+    def pid_log(self, pid, msg):
         ans = requests.get('http://{0}:{1}/pid_log'.format(self.host, self.port), {'pid': pid, 'msg': msg})
         if ans.status_code == 200:
             return json.loads(ans.content.decode('utf-8'))

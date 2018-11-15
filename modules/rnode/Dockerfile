@@ -10,7 +10,7 @@ RUN apt-get update -qq && apt-get install -y \
 # additional R packages
 RUN install2.r plumber devtools
 
-RUN R -e "devtools::install_github('qunis/ahub', 'dev', 'packages/ahubr')"
+RUN R -e "devtools::install_github('qunis/ahub', 'dev', 'packages/ahubr');"
 
 EXPOSE 8000
 

@@ -14,7 +14,7 @@ RUN pip install --trusted-host pypi.python.org -r requirements.txt
 EXPOSE 8001
 
 # Copy the current directory contents into the container at /app
-ADD *.py /app
+ADD *.py /app/
 
 
 # Run app.py when the container launches

@@ -9,6 +9,7 @@ import datetime
 import re
 import json
 import logging
+from nginxconfig import create_config
 
 debug = False
 
@@ -129,6 +130,11 @@ def get_services():
                     swagger_resp.append(False)
         apis = list(compress(services, swagger_resp))
 
+        try:
+            apis.remove('boss')
+        except ValueError:
+            pass
+
     except Exception as err:
         return {'error': format(err)}
     else:
@@ -142,6 +148,20 @@ def get_services_api():
         parameters: []
         """
     return json.dumps(get_services())
+
+# CURRENTLY NOT WORKING
+# config data cannot be updated on a live service
+# breakdown and restart of nginx would be too much work right now
+def update_nginx_config():
+    nodes = get_services()['apis']
+    new_conf = create_config(nodes)
+
+    ind = [s.name for s in client.services.list()].index('ahub_nginx')
+    nginx = client.services.list()[ind]
+    client.configs.create(name= 'ahub_nginx.conf', data= new_conf)
+    oldconf = client.configs.get('ahub_nginx.conf')
+
+    client.services.create()
 
 
 def pid_log(pid, msg, level='INFO'):
