@@ -61,10 +61,8 @@ redis = Redis(host=redishost, db=0, socket_connect_timeout=2, socket_timeout=2)
 client = docker.DockerClient(base_url=dockerhost)
 
 
-
 def get_current_time():
-    return datetime.datetime.now().strftime("%Y%m%d%H%M%S.%f")[:-3]
-
+    return datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S.%f")[:-3]
 
 # %%
 
