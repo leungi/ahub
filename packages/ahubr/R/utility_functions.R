@@ -22,6 +22,7 @@ switch_debug <- function(){
 #'
 #' @examples
 dummy_process <- function(t=10, steps=5){
+    pid <- get_current_pid(envir = parent.frame())
     for(k in 1:steps){
         pid_log(glue::glue('Executing process step {k}'))
         Sys.sleep(t / steps)

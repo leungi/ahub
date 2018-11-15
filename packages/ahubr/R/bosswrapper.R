@@ -36,7 +36,7 @@ get_pid_info <- function(pid){
 #' @export
 create_pid <- function(process_name){
     if(init_boss_api()){
-        httr::content(.ahubEnv$boss_api$ops$create_pid(process_name))
+        httr::content(.ahubEnv$boss_api$ops$create_pid(process_name))$pid
     }
 }
 
@@ -92,6 +92,7 @@ pid_log <- function(msg, level = "INFO"){
             }
         }else{
             flog.error('Log not written. Provide PID and MSG.')
+            flog.error(pid)
         }
     }else{
         flog.error(glue::glue('Could not write log for {pid}'))
