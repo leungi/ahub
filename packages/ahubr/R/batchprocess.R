@@ -43,7 +43,7 @@ daily_batch_process <- function(myfun,
                 f <- future({
                     if(debug) switch_debug()
                     # init logging
-                    pid_log(pid, glue('Process {process_name} started.'))
+                    pid_log(glue('Process {process_name} started.'))
                     set_pid_status(pid, 'running')
 
                     # do some stuff ##################
@@ -51,7 +51,7 @@ daily_batch_process <- function(myfun,
                     #################################
 
                     # wrap up
-                    pid_log(pid, glue('Process {process_name} finished'))
+                    pid_log(glue('Process {process_name} finished'))
                     set_pid_status(pid, 'finished')
                     return(TRUE)
                     }, packages=c("futile.logger", "glue", "ahubr"),

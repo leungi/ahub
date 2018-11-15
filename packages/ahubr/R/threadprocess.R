@@ -26,7 +26,7 @@ thread_process <- function(myfun,
     if(pid_info$status != 'init') pid <- create_pid(process_name)
 
 
-    pid_log(pid, glue('Process {process_name} started.'))
+    pid_log(glue('Process {process_name} started.'))
     set_pid_status(pid, 'running')
 
     # do some stuff ##################
@@ -36,7 +36,7 @@ thread_process <- function(myfun,
     set_pid_status(pid, 'finished')
 
     # wrap up
-    pid_log(pid, glue('Process {process_name} finished'))
+    pid_log(glue('Process {process_name} finished'))
 
 
     output <- list(msg=glue("Process {process_name} finished!"),
