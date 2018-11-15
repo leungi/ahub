@@ -24,7 +24,6 @@ function fetchData(method, url, data, requestOptions = {}) {
 
     const requestBody = {
         method: methodName,
-        mode: 'no-cors',
         headers: {
             'Content-Type': JSON_CONTENT,
             Accept: JSON_CONTENT,
