@@ -10,6 +10,7 @@ import re
 import json
 import logging
 from nginxconfig import create_config
+from flask_cors import CORS
 
 debug = False
 
@@ -18,6 +19,8 @@ class JSONResponse(Response):
     default_mimetype = 'application/json'
 
 app = Flask(__name__)
+CORS(app)
+
 app.response_class = JSONResponse
 
 # Configure Swagger
