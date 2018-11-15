@@ -17,7 +17,7 @@
 #'
 #' @examples
 daily_batch_process <- function(myfun,
-                              process_name = "test",
+                              process_name = "batch",
                               arglist = list(),
                               force=F,
                               debug = F
@@ -111,22 +111,6 @@ init_future <- function(){
     }
 }
 
-#' Title
-#'
-#' @param t
-#' @param pid
-#' @param steps
-#'
-#' @return
-#' @export
-#'
-#' @examples
-dummy_process <- function(t=10, steps=5){
-    for(k in 1:steps){
-        pid_log(glue::glue('Executing process step {k}'))
-        Sys.sleep(t / steps)
-    }
-}
 
 
 

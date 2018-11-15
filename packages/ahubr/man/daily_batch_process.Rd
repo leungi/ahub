@@ -4,7 +4,7 @@
 \alias{daily_batch_process}
 \title{Title}
 \usage{
-daily_batch_process(myfun, process_name = "test", arglist = list(),
+daily_batch_process(myfun, process_name = "batch", arglist = list(),
   force = F, debug = F)
 }
 \arguments{

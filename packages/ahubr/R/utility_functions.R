@@ -10,3 +10,21 @@ switch_debug <- function(){
     return(.ahubEnv$debug)
 }
 
+
+#' Title
+#'
+#' @param t
+#' @param pid
+#' @param steps
+#'
+#' @return
+#' @export
+#'
+#' @examples
+dummy_process <- function(t=10, steps=5){
+    for(k in 1:steps){
+        pid_log(glue::glue('Executing process step {k}'))
+        Sys.sleep(t / steps)
+    }
+}
+
