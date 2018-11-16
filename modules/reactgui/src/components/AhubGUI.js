@@ -3,6 +3,7 @@ import {get} from '../modules/fetch';
 import NodeBox from './NodeBox';
 
 const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
+//const API_ENDPOINT = 'localhost:8000';
 
 export default class AhubGUI extends React.Component {
     constructor (props) {

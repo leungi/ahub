@@ -2,6 +2,7 @@ import React from 'react';
 import {get} from '../modules/fetch';
 
 const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
+//const API_ENDPOINT = 'http://127.0.0.1:8000/';
 
 export default class NodeBox extends React.Component {
     constructor(props) {
@@ -35,6 +36,7 @@ export default class NodeBox extends React.Component {
 
     getEndpointResponse(endpointName) {
         get(`${API_ENDPOINT}${this.props.name}/${endpointName}`)
+        //  get(`${API_ENDPOINT}${endpointName}`)
             .then(response => {
                 const newEndpointState = [
                     ...this.state.endpoints,
