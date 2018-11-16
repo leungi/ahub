@@ -7,7 +7,9 @@
 set_pid_status(pid, status)
 }
 \arguments{
-\item{status}{}
+\item{pid}{(int) process id}
+
+\item{status}{(character) status "finished", "running", "aborted", "init"}
 }
 \description{
 Title

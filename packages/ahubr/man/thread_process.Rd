@@ -7,8 +7,22 @@
 thread_process(myfun, process_name = "thread", arglist, debug = F)
 }
 \arguments{
-\item{debug}{}
+\item{myfun}{function, which is to be executed in thread mode}
+
+\item{process_name}{name of the process to be saved}
+
+\item{arglist}{named list of arguments for myfun}
+
+\item{debug}{TRUE/FALSE endpoint for call to boss is switched to .ahubEnv$debughost instead of "nginx"}
+}
+\value{
+list with message, logitems, status and process id
 }
 \description{
 Title
+}
+\examples{
+\dontrun{
+thread_process(dummy_process, "test", arglist = list(t=1))
+}
 }

@@ -1,12 +1,13 @@
 Package: ahubr
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
+Title: Utility functions for easy integration of existing analytical functions
+    into the AHUB deployment framework
+Version: 0.2.0
+Author: Martin Hanewald
+Maintainer: Martin Hanewald <martin.hanewald@qunis.de>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Imports:

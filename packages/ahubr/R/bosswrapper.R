@@ -4,12 +4,8 @@
 
 #' Title
 #'
-#' @param process_name
+#' @param process_name name of the process
 #'
-#' @return
-#' @export
-#'
-#' @examples
 get_pid <- function(process_name){
     if(init_boss_api()){
         httr::content(.ahubEnv$boss_api$ops$get_pid(process_name))$pid
@@ -18,10 +14,8 @@ get_pid <- function(process_name){
 
 #' Title
 #'
-#' @param pid
+#' @param pid (int) process id
 #'
-#' @return
-#' @export
 get_pid_info <- function(pid){
     if(init_boss_api()){
         httr::content(.ahubEnv$boss_api$ops$get_pid_info(pid))
@@ -30,10 +24,8 @@ get_pid_info <- function(pid){
 
 #' Title
 #'
-#' @param process_name
+#' @param process_name (character) process name
 #'
-#' @return
-#' @export
 create_pid <- function(process_name){
     if(init_boss_api()){
         httr::content(.ahubEnv$boss_api$ops$create_pid(process_name))$pid
@@ -42,13 +34,8 @@ create_pid <- function(process_name){
 
 #' Title
 #'
-#' @param pid
-#' @param status
-#'
-#' @return
-#' @export
-#'
-#' @examples
+#' @param pid (int) process id
+#' @param status (character) status "finished", "running", "aborted", "init"
 set_pid_status <- function(pid, status){
     if(init_boss_api()){
         httr::content(.ahubEnv$boss_api$ops$set_pid_status(pid, status))
@@ -58,12 +45,7 @@ set_pid_status <- function(pid, status){
 
 #' Title
 #'
-#' @param pid
-#'
-#' @return
-#' @export
-#'
-#' @examples
+#' @param pid (int) process id
 get_pid_log <- function(pid){
     if(init_boss_api()){
         httr::content(.ahubEnv$boss_api$ops$get_pid_log(pid))
@@ -73,13 +55,12 @@ get_pid_log <- function(pid){
 
 #' Write log to boss with given PID
 #'
-#' @param msg
-#' @param level
+#' @param msg Message to log
+#' @param level Log level INFO, DEBUG, WARN, or ERROR
 #'
-#' @return
 #' @export
 #'
-#' @examples
+#' @return Nothing
 pid_log <- function(msg, level = "INFO"){
     pid <- try(get_current_pid(envir = parent.frame()), silent=T)
     if(init_boss_api()){
@@ -100,14 +81,11 @@ pid_log <- function(msg, level = "INFO"){
 }
 
 
-#' Title
+#' Retrieve pid from given environment
 #'
-#' @param envir
-#'
-#' @return
+#' @param envir environment
 #' @export
 #'
-#' @examples
 get_current_pid <- function(envir){
     get("pid", envir = envir)
 }

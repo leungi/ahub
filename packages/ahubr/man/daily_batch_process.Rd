@@ -2,14 +2,30 @@
 % Please edit documentation in R/batchprocess.R
 \name{daily_batch_process}
 \alias{daily_batch_process}
-\title{Title}
+\title{Run a function as a daily executable batch process in the AHUB framework}
 \usage{
 daily_batch_process(myfun, process_name = "batch", arglist = list(),
   force = F, debug = F)
 }
 \arguments{
-\item{arglist}{}
+\item{myfun}{function, which is to be executed in batchmode}
+
+\item{process_name}{name of the process to be saved}
+
+\item{arglist}{named list of arguments for myfun}
+
+\item{force}{TRUE/FALSE force execution of function if process has already run today}
+
+\item{debug}{TRUE/FALSE endpoint for call to boss is switched to .ahubEnv$debughost instead of "nginx"}
+}
+\value{
+list with message, logitems, status and process id
 }
 \description{
-Title
+Run a function as a daily executable batch process in the AHUB framework
+}
+\examples{
+\dontrun{
+daily_batch_process(dummy_process, "test", arglist = list(t=1))
+}
 }

@@ -2,13 +2,13 @@
 % Please edit documentation in R/bosswrapper.R
 \name{get_current_pid}
 \alias{get_current_pid}
-\title{Title}
+\title{Retrieve pid from given environment}
 \usage{
 get_current_pid(envir)
 }
 \arguments{
-\item{envir}{}
+\item{envir}{environment}
 }
 \description{
-Title
+Retrieve pid from given environment
 }

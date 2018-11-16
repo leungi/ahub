@@ -15,14 +15,14 @@
 
 #' Get the boss api object
 #'
-#' @param host
+#' @param host (character) hostname
+#' @param port (int) port
 #'
-#' @return
-#' @export
+#' @return TRUE/FALSE if connection was successfully established
 #'
 #' @import futile.logger
 #'
-#' @examples
+
 init_boss_api <- function(
     host = ifelse(.ahubEnv$debug, .ahubEnv$debughost, .ahubEnv$host),
     port = 8000

@@ -2,10 +2,13 @@
 % Please edit documentation in R/utility_functions.R
 \name{switch_debug}
 \alias{switch_debug}
-\title{Title}
+\title{Switch to debug mode}
 \usage{
 switch_debug()
 }
+\value{
+TRUE/FALSE debug status
+}
 \description{
-Title
+Switch to debug mode
 }

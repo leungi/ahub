@@ -7,7 +7,7 @@
 get_pid_info(pid)
 }
 \arguments{
-\item{pid}{}
+\item{pid}{(int) process id}
 }
 \description{
 Title

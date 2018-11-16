@@ -8,7 +8,18 @@ get_node_api(dir = "node1", host = "localhost", port = "8000",
   uid = NULL, pwd = NULL)
 }
 \arguments{
-\item{pwd}{}
+\item{dir}{(character) endpoint}
+
+\item{host}{(character) hostname}
+
+\item{port}{(int) port}
+
+\item{uid}{(character) User ID for basic authentication (deprecated)}
+
+\item{pwd}{(character) Password for basic authentication (deprecated)}
+}
+\value{
+list with content or error message
 }
 \description{
 Get Node API from swagger documentation

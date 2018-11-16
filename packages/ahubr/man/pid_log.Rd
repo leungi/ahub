@@ -7,7 +7,12 @@
 pid_log(msg, level = "INFO")
 }
 \arguments{
-\item{level}{}
+\item{msg}{Message to log}
+
+\item{level}{Log level INFO, DEBUG, WARN, or ERROR}
+}
+\value{
+Nothing
 }
 \description{
 Write log to boss with given PID

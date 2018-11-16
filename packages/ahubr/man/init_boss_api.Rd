@@ -8,7 +8,12 @@ init_boss_api(host = ifelse(.ahubEnv$debug, .ahubEnv$debughost,
   .ahubEnv$host), port = 8000)
 }
 \arguments{
-\item{host}{}
+\item{host}{(character) hostname}
+
+\item{port}{(int) port}
+}
+\value{
+TRUE/FALSE if connection was successfully established
 }
 \description{
 Get the boss api object

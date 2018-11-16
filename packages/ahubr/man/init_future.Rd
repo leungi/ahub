@@ -2,10 +2,13 @@
 % Please edit documentation in R/batchprocess.R
 \name{init_future}
 \alias{init_future}
-\title{Title}
+\title{Initiate multisession future for batch process}
 \usage{
 init_future()
 }
+\value{
+TRUE/FALSE if successful
+}
 \description{
-Title
+Initiate multisession future for batch process
 }

@@ -3,18 +3,16 @@
 
 #' Get Node API from swagger documentation
 #'
-#' @param dir
-#' @param host
-#' @param port
-#' @param uid
-#' @param pwd
+#' @param dir (character) endpoint
+#' @param host (character) hostname
+#' @param port (int) port
+#' @param uid (character) User ID for basic authentication (deprecated)
+#' @param pwd (character) Password for basic authentication (deprecated)
 #'
-#' @return
+#' @return list with content or error message
 #' @export
 #'
 #' @import httr rapiclient jsonlite
-#'
-#' @examples
 get_node_api <-
     function(dir = 'node1',
              host = 'localhost',
@@ -69,18 +67,16 @@ get_node_api <-
 
 #' Get HTML content from analytical node
 #'
-#' @param dir
-#' @param host
-#' @param port
-#' @param uid
-#' @param pwd
+#' @param dir (character) endpoint
+#' @param host (character) hostname
+#' @param port (int) port
+#' @param uid (character) User ID for basic authentication (deprecated)
+#' @param pwd (character) Password for basic authentication (deprecated)
 #'
-#' @return
+#' @return list with content or error message
 #' @export
 #'
 #' @import httr
-#'
-#' @examples
 get_node_html <-
     function(dir = 'node1',
              host = 'localhost',

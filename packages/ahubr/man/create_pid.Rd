@@ -7,7 +7,7 @@
 create_pid(process_name)
 }
 \arguments{
-\item{process_name}{}
+\item{process_name}{(character) process name}
 }
 \description{
 Title

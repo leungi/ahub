@@ -2,20 +2,24 @@
 
 
 
-#' Title
+#' Run a function as a daily executable batch process in the AHUB framework
 #'
-#' @param process_name
-#' @param myfun
-#' @param force
-#' @param arglist
+#' @param process_name name of the process to be saved
+#' @param myfun function, which is to be executed in batchmode
+#' @param force TRUE/FALSE force execution of function if process has already run today
+#' @param arglist named list of arguments for myfun
+#' @param debug TRUE/FALSE endpoint for call to boss is switched to .ahubEnv$debughost instead of "nginx"
 #'
-#' @return
+#' @return list with message, logitems, status and process id
 #' @export
 #'
 #' @import glue future futile.logger
 #' @importFrom magrittr %>%
 #'
 #' @examples
+#' \dontrun{
+#' daily_batch_process(dummy_process, "test", arglist = list(t=1))
+#' }
 daily_batch_process <- function(myfun,
                               process_name = "batch",
                               arglist = list(),
@@ -88,14 +92,11 @@ daily_batch_process <- function(myfun,
 }
 
 
-#' Title
+#' Initiate multisession future for batch process
 #'
-#' @return
-#' @export
+#' @return TRUE/FALSE if successful
 #'
 #' @import future
-#'
-#' @examples
 init_future <- function(){
     if(!.ahubEnv$future_init){
         status <- try(plan(multisession), silent=TRUE)

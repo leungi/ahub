@@ -2,17 +2,20 @@
 
 #' Title
 #'
-#' @param myfun
-#' @param process_name
-#' @param arglist
-#' @param debug
+#' @param process_name name of the process to be saved
+#' @param myfun function, which is to be executed in thread mode
+#' @param arglist named list of arguments for myfun
+#' @param debug TRUE/FALSE endpoint for call to boss is switched to .ahubEnv$debughost instead of "nginx"
 #'
-#' @return
+#' @return list with message, logitems, status and process id
 #' @export
 #'
 #' @import glue
 #'
 #' @examples
+#' \dontrun{
+#' thread_process(dummy_process, "test", arglist = list(t=1))
+#' }
 thread_process <- function(myfun,
                            process_name = "thread",
                            arglist,

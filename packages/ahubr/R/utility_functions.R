@@ -1,26 +1,21 @@
 
-#' Title
+#' Switch to debug mode
 #'
-#' @return
+#' @return TRUE/FALSE debug status
 #' @export
-#'
-#' @examples
 switch_debug <- function(){
     .ahubEnv$debug <- !.ahubEnv$debug
     return(.ahubEnv$debug)
 }
 
 
-#' Title
+#' Dummy process for demonstrating AHUB batch and thread functionality
 #'
-#' @param t
-#' @param pid
-#' @param steps
+#' @param t (float) total process time
+#' @param steps (integer) How many process steps
 #'
-#' @return
+#' @return NOthing
 #' @export
-#'
-#' @examples
 dummy_process <- function(t=10, steps=5){
     pid <- get_current_pid(envir = parent.frame())
     for(k in 1:steps){
