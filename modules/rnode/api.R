@@ -14,8 +14,8 @@ batch <- function(force = 0, t = 10) {
         dummy_process,
         process_name = "batch",
         force = force,
-        arglist = list(t = t),
-        debug=T
+        arglist = list(t = t)
+        #,debug=T
     )
 }
 
@@ -28,19 +28,21 @@ batch <- function(force = 0, t = 10) {
 #* @param t time to execute process
 #* @get /thread
 #* @json
-batch <- function(t = .1) {
+thread <- function(t = .1) {
     thread_process(
         dummy_process,
         process_name = "thread",
-        arglist = list(t = t),
-        debug=T
+        arglist = list(t = t)
+        #,debug=T
     )
 }
 
 
 
-#* @filter cors
-cors <- function(res) {
-    res$setHeader("Access-Control-Allow-Origin", "*")
-    plumber::forward()
-}
+# #* @filter cors
+# cors <- function(res) {
+#     res$setHeader("Access-Control-Allow-Origin", "*")
+#     #res$setHeader("Access-Control-Allow-Method", "POST, GET, OPTIONS")
+#     #res$setHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type")
+#     plumber::forward()
+# }

@@ -19,6 +19,7 @@ class JSONResponse(Response):
     default_mimetype = 'application/json'
 
 app = Flask(__name__)
+
 CORS(app)
 
 app.response_class = JSONResponse
@@ -121,7 +122,7 @@ def get_services():
         swagger_resp = []
         for s in services:
             try:
-                r = requests.get('http://{0}:8000/{1}/swagger.json'.format(nginxhost, s), timeout=.1)
+                r = requests.get('http://{0}:8000/{1}/swagger.json'.format(nginxhost, s), timeout=.5)
             except Exception as err:
                 swagger_resp.append(False)
             else:
@@ -260,14 +261,13 @@ def create_pid(process_name):
     tstamp = float(get_current_time())
     pid = str(redis.incr('next_pid'))
     # add pid to sorted set [process_name], score is time
-    redis.zadd(process_name, pid, tstamp)
+    redis.zadd(process_name, {pid: tstamp})
     # create hash
     redis.hmset('process:' + pid,
                 {'name': process_name,
                  'time': tstamp,
                  'status': 'init'})
     return pid
-
 
 # create_pid('lolnais')
 
@@ -448,6 +448,14 @@ def hello():
     try:
         redis.incr("counter")
         return json.dumps({'status': 'redis online'})
+    except RedisError:
+        return json.dumps({'error': 'cannot connect to redis'})
+
+@app.route("/flushdb")
+def redisflush():
+    try:
+        redis.flushdb()
+        return json.dumps({'status': 'redis db flushed'})
     except RedisError:
         return json.dumps({'error': 'cannot connect to redis'})
 
