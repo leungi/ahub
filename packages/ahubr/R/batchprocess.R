@@ -48,15 +48,20 @@ daily_batch_process <- function(myfun,
                     if(debug) switch_debug()
                     # init logging
                     pid_log(glue('Process {process_name} started.'))
-                    set_pid_status(pid, 'running')
+                    ahubr:::set_pid_status(pid, 'running')
 
                     # do some stuff ##################
-                    do.call(myfun, arglist)
+                    ans <- try(do.call(myfun, arglist))
                     #################################
 
-                    # wrap up
-                    pid_log(glue('Process {process_name} finished'))
-                    set_pid_status(pid, 'finished')
+                    if(inherits(ans, "try-error")){
+                        pid_log(glue('Process {process_name} encountered error {ans[1]}'))
+                        ahubr:::set_pid_status(pid, 'error')
+                    }else{
+                        # wrap up
+                        pid_log(glue('Process {process_name} finished'))
+                        ahubr:::set_pid_status(pid, 'finished')
+                    }
                     return(TRUE)
                     }, packages=c("futile.logger", "glue", "ahubr"),
                     globals = c("pid", "process_name", "myfun", "arglist", "debug")

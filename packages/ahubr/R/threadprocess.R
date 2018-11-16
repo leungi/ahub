@@ -18,7 +18,7 @@
 #' }
 thread_process <- function(myfun,
                            process_name = "thread",
-                           arglist,
+                           arglist = list(),
                            debug = F) {
     # init logging
     if(debug) switch_debug()
