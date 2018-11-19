@@ -23,7 +23,8 @@ class Checker:
             self.log.error('Could not establish connection to boss.')
             return apis
 
-        newapis = json.loads(ans.content)['apis']
+        raw = json.loads(ans.content)
+        newapis = set(raw['apis']).union(raw['html'])
         for a in newapis:
             if a not in apis:
                 found = True
