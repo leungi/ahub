@@ -5,6 +5,7 @@ RUN install2.r \
     shiny \
     shinyjs \
     shinydashboard \
+    DT \
     rapiclient && \
     R -e 'devtools::install_github("nik01010/dashboardthemes")'
 
