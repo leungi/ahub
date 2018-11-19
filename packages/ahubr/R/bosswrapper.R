@@ -48,8 +48,9 @@ set_pid_status <- function(pid, status){
 #' @param pid (int) process id
 get_pid_log <- function(pid){
     if(init_boss_api()){
-        httr::content(.ahubEnv$boss_api$ops$get_pid_log(pid))
+        ans <- httr::content(.ahubEnv$boss_api$ops$get_pid_log(pid))
     }
+    unlist(ans)
 }
 
 
