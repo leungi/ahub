@@ -30,7 +30,7 @@ server <- function(input, output, session){
         #loglines <- read_lines('../process.log') %>% 
         #    sort(decreasing = T) %>% 
         #    head(20) 
-        loglines <- "Log read from database not implemented yet."
+        loglines <- content(boss_api$ops$get_all_logs()) %>% bind_rows()
         logcontent(loglines)
     })
     
@@ -45,7 +45,7 @@ server <- function(input, output, session){
     
     observeEvent(input$exec_thread1, {
         if(is.null(node_api[[1]]$errmsg)){ # only when operations are fetched
-            response <- node_api[[1]]$ops[[2]](t = .001)
+            response <- node_api[[1]]$ops[[2]]()
             ans1(httr::content(response))    
         }else{
             err(node_api[[1]]$errmsg)
@@ -63,7 +63,7 @@ server <- function(input, output, session){
     
     observeEvent(input$exec_thread2, {
         if(is.null(node_api[[2]]$errmsg)){ # only when operations are fetched
-            response <- node_api[[2]]$ops[[2]](t = .001)
+            response <- node_api[[2]]$ops[[2]]()
             ans2(httr::content(response))    
         }else{
             err(node_api[[2]]$errmsg)
@@ -78,8 +78,8 @@ server <- function(input, output, session){
         ans2()
     })
     
-    output$logfile <- renderPrint({
-        cat(logcontent(), fill=T)
+    output$logfile <- renderDataTable({
+        datatable(logcontent())
     })
     
     output$error <- renderPrint({

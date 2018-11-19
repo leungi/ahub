@@ -8,7 +8,8 @@ pkgs <- c('tidyverse',
           'dashboardthemes',
           'rapiclient',
           'jsonlite',
-          'httr'
+          'httr',
+          'DT'
           )
 
 # load packages
@@ -59,7 +60,7 @@ sidebar <- dashboardSidebar(sidebarMenu(
         icon = icon("globe")
     ),
     menuItem("Logs", tabName = "logs", icon = icon("info-circle")), 
-    menuItem("HTML Header", tabName = "headertab", icon = icon("info-circle")),
+    #menuItem("HTML Header", tabName = "headertab", icon = icon("info-circle")),
     verbatimTextOutput('error')
 ))
 
@@ -72,38 +73,28 @@ body <- dashboardBody(
     tabItems(
         tabItem(tabName = "node1",
                 tabBox(width = 12,
-                    #status = "primary",
                     title = "Node 1",
                     tabPanel('Single execution',
                         actionButton('exec_batch1', 'Run batch operation'),
                         actionButton('exec_thread1', 'Run thread operation'),
                         verbatimTextOutput('result1')
-                        ),
-                    tabPanel('Swagger',
-                        p()
                         )
                     )
                 ),
         tabItem(tabName = "node2",
                 tabBox(width = 12,
-                   #status = "primary",
                    title = "Node 2",
                    tabPanel('Single execution',
                             actionButton('exec_batch2', 'Run batch operation'),
                             actionButton('exec_thread2', 'Run thread operation'),
                             verbatimTextOutput('result2')
-                        ),
-                   tabPanel('Swagger',
-                        p()
                         )
                     )
                 ),
         tabItem(tabName = "node3",
                 box(width = 12,
-                   #status = "primary",
                    title = "Node 3",
                    htmlOutput('prophetdemo')
-                   #includeHTML('test.html')
                 )
         ),
         tabItem(tabName = 'logs',
@@ -112,7 +103,7 @@ body <- dashboardBody(
                     status = "primary",
                     title = "Logfile",
                     actionButton('logrefresh', 'Refresh'),
-                    verbatimTextOutput('logfile')
+                    dataTableOutput('logfile')
                 )),
         tabItem(tabName = 'headertab',
                 pageWithSidebar(
