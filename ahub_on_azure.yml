@@ -92,7 +92,7 @@ services:
         
 configs:
   nginx_template.conf:
-    file: ./configs/nginx_template.conf
+    file: ./configs/nginx_template_azure.conf
   upstream_template.conf:
     file: ./configs/upstream_template.conf
   location_template.conf:
