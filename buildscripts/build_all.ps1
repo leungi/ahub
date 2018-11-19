@@ -1,7 +1,9 @@
-# build all images and push to registry
+param (
+    [string]$tag = "latest"
+)
 
-build_rnode.ps
-build_pynode.ps
-build_boss.ps
-build_nginx.ps
-build_client.ps
+./buildscripts/build_rnode.ps1 -tag $tag
+./buildscripts/build_pynode.ps1 -tag $tag
+./buildscripts/build_boss.ps1 -tag $tag
+./buildscripts/build_gui.ps1 -tag $tag
+./buildscripts/build_updater.ps1 -tag $tag

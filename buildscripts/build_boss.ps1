@@ -1,5 +1,7 @@
-# build all images and push to registry
+param (
+    [string]$tag = "latest"
+)
 
-docker build -t qunis/ahub_boss ./modules/boss
-docker push qunis/ahub_boss
+docker build -t qunis/ahub_boss:$tag ./modules/boss
+docker push qunis/ahub_boss:$tag
 
