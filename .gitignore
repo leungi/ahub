@@ -7,3 +7,5 @@
 /modules/boss/__pycache__
 /.idea
 /packages/ahubr/..Rcheck
+/packages/ahubr/*.Rhistory
+/packages/ahubr/*.Rproj

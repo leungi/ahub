@@ -2,27 +2,27 @@ version: '3.3'
 services:
 
 # -------------------------------------------
+# NODE STACK (add analytical modules here)
+# -------------------------------------------
   node1:
     image: qunis/ahub_rnode
-    deploy:
-      replicas: 1
-    depends_on:
-     - redis
+
 # -------------------------------------------
   node2:
     image: qunis/ahub_rnode 
     deploy:
       replicas: 1
-    depends_on:
-     - redis
+
 # -------------------------------------------
   node3:
     image: qunis/prophetdemo
+    
 # -------------------------------------------
-  gui:
-    image: qunis/ahub_gui
-  
+
 # -------------------------------------------
+# SERVICE STACK (DO NOT TOUCH)
+# -------------------------------------------
+
   nginx:
     image: nginx
     ports:
@@ -32,7 +32,7 @@ services:
     volumes:
       - "/etc/letsencrypt:/etc/letsencrypt"
     configs:
-      - source: nginx.conf
+      - source: nginx_template.conf
         target: /etc/nginx/nginx.conf
     secrets:
       - source: server.crt
@@ -50,7 +50,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - "/redisdata:/data"
+      - "/data/redis:/data"
     deploy:
       placement:
         constraints: [node.role == manager]
@@ -59,18 +59,21 @@ services:
     image: qunis/ahub_boss
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+    configs:
+      - source: nginx_template.conf
+        target: /app/templates/nginx_template.conf
+      - source: upstream_template.conf
+        target: /app/templates/upstream_template.conf
+      - source: location_template.conf
+        target: /app/templates/location_template.conf
     depends_on:
       - redis
 # -------------------------------------------
-  visualizer:
-    image: dockersamples/visualizer:stable
-    ports:
-      - "8080:8080"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+  gui:
+    image: qunis/ahub_gui
+ # -------------------------------------------
+  updater:
+    image: qunis/ahub_updater
 # -------------------------------------------
   portainer:
     image: portainer/portainer
@@ -78,16 +81,22 @@ services:
       - "9000:9000"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/data/portainer:/data"
     deploy:
       placement:
         constraints: [node.role == manager]
 
 # -------------------------------------------
+# CONFIGS & SECRETS
 # -------------------------------------------
         
 configs:
-  nginx.conf:
-    file: ./configs/nginx.conf
+  nginx_template.conf:
+    file: ./configs/nginx_template.conf
+  upstream_template.conf:
+    file: ./configs/upstream_template.conf
+  location_template.conf:
+    file: ./configs/location_template.conf
 
 secrets:
   server.crt:

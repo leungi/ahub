@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.7-slim
+FROM python:3.7.1-slim
 
 # Set the working directory to /app
 WORKDIR /app
@@ -15,8 +15,7 @@ EXPOSE 8000
 
 # Copy the current directory contents into the container at /app
 ADD *.py /app/
-ADD ./templates/. /app/templates/
 
 
 # Run app.py when the container launches
-CMD ["python", "bossmain.py"]
+CMD ["python", "updater.py"]

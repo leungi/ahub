@@ -5,3 +5,4 @@ numpy
 flasgger
 docker
 flask-cors
+requests

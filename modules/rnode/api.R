@@ -23,8 +23,7 @@ batch <- function(force = 0, t = 10) {
 # THREAD FUNCTION
 # ----------------------------------------
 
-#* Batch process running t seconds
-#* @param force [1,0] force execution when process was already run today
+#* Thread process running t seconds
 #* @param t time to execute process
 #* @get /thread
 #* @json
@@ -39,10 +38,10 @@ thread <- function(t = .1) {
 
 
 
-# #* @filter cors
-# cors <- function(res) {
-#     res$setHeader("Access-Control-Allow-Origin", "*")
-#     #res$setHeader("Access-Control-Allow-Method", "POST, GET, OPTIONS")
-#     #res$setHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type")
-#     plumber::forward()
-# }
+#* @filter cors
+cors <- function(res) {
+    res$setHeader("Access-Control-Allow-Origin", "*")
+    #res$setHeader("Access-Control-Allow-Method", "POST, GET, OPTIONS")
+    #res$setHeader("Access-Control-Allow-Headers", "X-PINGOTHER, Content-Type")
+    plumber::forward()
+}

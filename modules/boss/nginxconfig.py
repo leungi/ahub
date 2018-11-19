@@ -1,8 +1,8 @@
 import re
 from base64 import urlsafe_b64encode
 
+
 def create_config(nodes):
-    #nodes = ['boss', 'node1', 'node2', 'node3']
     config = open('templates/nginx_template.conf', mode='r').read()
     upstream_template = open('templates/upstream_template.conf', mode="r").read()
     location_template = open('templates/location_template.conf', mode="r").read()
@@ -23,5 +23,7 @@ def create_config(nodes):
     config = config.replace('#INSERTUPSTREAM', "\n".join(upstream))
     config = config.replace('#INSERTLOCATION', "\n".join(location))
     config_enc = urlsafe_b64encode(config.encode('utf-8'))
-    return config_enc
 
+    open('test.txt', 'w').write(config)
+
+    return {"config": config, "config_enc": config_enc}
