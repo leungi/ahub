@@ -1,1 +1,0 @@
-docker -H localhost:2376 stack rm ahub

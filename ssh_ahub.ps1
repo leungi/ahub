@@ -1,1 +1,0 @@
-ssh ahubadmin@ahub.westeurope.cloudapp.azure.com
