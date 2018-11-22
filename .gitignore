@@ -10,3 +10,9 @@
 /packages/ahubr/*.Rhistory
 /packages/ahubr/*.Rproj
 /data
+/modules/updater/__pycache__
+/modules/aad-auth/config.py
+__pycache__
+.idea
+/configs/aadconfig.py
+/modules/aad-auth/aadconfig.py
