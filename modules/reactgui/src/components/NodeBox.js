@@ -1,4 +1,12 @@
 import React from 'react';
+import {
+    Box, 
+    Button, 
+    Heading, 
+    Paragraph,
+    Text,
+    TextArea,
+} from 'grommet';
 import {get} from '../modules/fetch';
 
 const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
@@ -55,10 +63,15 @@ export default class NodeBox extends React.Component {
 
     render(){
         return(
-            <div className="nodebox w3-col m4 l3">
-                <div className="boxheader">
-                    {this.props.name}
-                </div>
+            <Box        
+                margin={{
+                    horizontal: 'medium'
+                }}
+                pad='medium'
+            >
+                <Heading level='2'>
+                    Overview for: <Text color='accent-1' size='xxlarge'>{this.props.name}</Text>
+                </Heading>
                 {
                     this.state.endpoints
                     ? this.state.endpoints.map(endpoint => (
@@ -69,24 +82,35 @@ export default class NodeBox extends React.Component {
                             getEndpointResponse={this.getEndpointResponse}
                         />
                     ))
-                    : <p>Loading endpoint functions...</p>
+                    : <Paragraph>Loading endpoint functions...</Paragraph>
                 }
-            </div>
+            </Box>
         )
     }
 }
 
 const EndpointBox = props => {
     return (
-        <div className="boxbody">
-            <button
+        <Box
+            basis='200px'
+            border='all'
+            margin={{
+                vertical: 'medium'
+            }}
+            pad='medium'            
+            background='neutral-1'
+            fill={false}
+        >
+            <Button
                 className="endpointbutton"
-                onClick={() => props.getEndpointResponse(props.name)}>
-                {props.name.toUpperCase()}
-            </button>
-            <div className="response">
-                {JSON.stringify(props.response)}
-            </div>
-        </div>
+                onClick={() => props.getEndpointResponse(props.name)} 
+                label={props.name.toUpperCase()}
+            />
+            <TextArea
+                readOnly
+                plain={true}
+                value={JSON.stringify(props.response)}
+            />
+        </Box>
     )
 };

@@ -23,9 +23,9 @@ function fetchData(method, url, data, requestOptions = {}) {
     const methodName = method.toUpperCase();
 
     const requestBody = {
-        method: methodName,
+        method: methodName,        
         headers: {
-            //'Content-Type': JSON_CONTENT,
+            'Content-Type': JSON_CONTENT,
             Accept: JSON_CONTENT,
         },
         // credentials: 'same-origin',

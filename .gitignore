@@ -6,6 +6,8 @@
 /modules/boss/.idea
 /modules/boss/__pycache__
 /.idea
+/.vscode
+/modules/reactgui/node_modules
 /packages/ahubr/..Rcheck
 /packages/ahubr/*.Rhistory
 /packages/ahubr/*.Rproj
