@@ -120,10 +120,3 @@ export default class AhubGUI extends React.Component {
         )
     }
 }
- /*
- {
-    this.state.nodes
-        ? this.state.nodes.map(node => <NodeBox key={`node-${node}`} name={node} />)
-        : <p>Loading nodes...</p>
-}
-*/

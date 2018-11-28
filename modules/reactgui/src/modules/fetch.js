@@ -5,7 +5,6 @@
  * Per default calls can only be made to the same host and only have a JSON body.
  */
 import 'whatwg-fetch';
-import JSONPretty from 'react-json-pretty';
 
 const POST = 'POST';
 const GET = 'GET';
