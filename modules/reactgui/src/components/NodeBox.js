@@ -18,6 +18,16 @@ const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
 export default class NodeBox extends React.Component {
     constructor(props) {
         super(props);
+
+        /**
+         * endpoints are structured like this:
+         * endpointName : {
+         *     query: {
+         *         queryParamName: queryParamValue,
+         *     },
+         *     response: responseJSON,
+         * }
+         */
         this.state = {
             response: 'INIT',
             endpoints: {},
@@ -53,12 +63,19 @@ export default class NodeBox extends React.Component {
 
     }
 
+    /**
+     * Curried function to create query parameter value from input for given endpoint
+     * @param {string} endpointName
+     * @param {string} queryParam
+     * @returns {Function} event handler for onChange-event
+     */
     updateEndpointQuery(endpointName, queryParam) {
         return event => {
             this.setState({
                 endpoints: {
                     ...this.state.endpoints,
                     [endpointName]: {
+                        // spreading does not apply a deep merge, so we have to traverse every level manually
                         ...this.state.endpoints[endpointName],
                         query: {
                             ...this.state.endpoints[endpointName].query,
@@ -73,18 +90,20 @@ export default class NodeBox extends React.Component {
     getEndpointResponse(endpointName) {
         let queryPartsString = '';
 
+        // only build query params if we have query parts
         if(this.state.endpoints[endpointName].query) {
             queryPartsString = Object.entries(this.state.endpoints[endpointName].query)
                 .reduce((queryString, queryParts, index) => {
+                    // only add query parts if we actually have a value
                     if (queryParts[1]) {
-                        queryString += `${index > 0 ? '&' : '?'}${queryParts[0]}=${queryParts[1]}`;
+                        // the query string has to start with '?'
+                        queryString += `${queryString.length > 0 ? '&' : '?'}${queryParts[0]}=${queryParts[1]}`;
                     }
                     return queryString;
                 }, '');
         }
 
         get(`${API_ENDPOINT}${this.props.name}/${endpointName}${queryPartsString}`)
-        //  get(`${API_ENDPOINT}${endpointName}`)
             .then(response => {
                 const newEndpointState = {
                     ...this.state.endpoints,
