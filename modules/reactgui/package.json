@@ -9,6 +9,7 @@
     "polished": "^2.3.0",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
+    "react-json-pretty": "^1.7.9",
     "react-scripts": "2.1.1",
     "styled-components": "^4.1.1",
     "whatwg-fetch": "^3.0.0"

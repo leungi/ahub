@@ -11,6 +11,7 @@ import {
 import { get } from '../modules/fetch';
 import MainNavLink from './MainNavLink';
 import NodeBox from './NodeBox';
+import Debug from './Debug'
 
 const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
 //const API_ENDPOINT = 'localhost:8000';
@@ -50,8 +51,8 @@ export default class AhubGUI extends React.Component {
 
     render() {
         return (
-            <Grommet 
-                theme={theme} 
+            <Grommet
+                theme={theme}
                 full
             >
                     <Grid
@@ -64,13 +65,13 @@ export default class AhubGUI extends React.Component {
                         rows={['flex']}
                         gap='none'
                     >
-                        <Box 
-                            gridArea='nav' 
+                        <Box
+                            gridArea='nav'
                             background='brand'
                             pad='medium'
                         >
                             <Box>
-                                <Image 
+                                <Image
                                     src='https://qunis.de/wordpress-qunis/wp-content/themes/qunis-theme-2016/images/interface/qunis-big-data-logo-w2x.png'
                                 />
                             </Box>
@@ -85,7 +86,7 @@ export default class AhubGUI extends React.Component {
                                 {
                                     this.state.nodes
                                     && this.state.nodes.map(node => (
-                                        <MainNavLink 
+                                        <MainNavLink
                                             key={`navlink-${node}`}
                                             to={node}
                                         >
@@ -93,23 +94,25 @@ export default class AhubGUI extends React.Component {
                                         </MainNavLink>
                                     ))
                                 }
+                                <MainNavLink to='debug'>Debug</MainNavLink>
                             </Box>
                         </Box>
-                        <Box 
-                            gridArea='main' 
-                            background='brand' 
+                        <Box
+                            gridArea='main'
+                            background='brand'
                         >
                             <Router>
                                 {
                                     this.state.nodes
                                     && this.state.nodes.map(node => (
-                                        <NodeBox 
+                                        <NodeBox
                                             key={`nodebox-${node}`}
-                                            path={node} 
-                                            name={node} 
+                                            path={node}
+                                            name={node}
                                         />
                                     ))
                                 }
+                                <Debug path='/debug'/>
                             </Router>
                         </Box>
                     </Grid>
@@ -122,5 +125,5 @@ export default class AhubGUI extends React.Component {
     this.state.nodes
         ? this.state.nodes.map(node => <NodeBox key={`node-${node}`} name={node} />)
         : <p>Loading nodes...</p>
-} 
+}
 */
