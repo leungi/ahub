@@ -54,7 +54,7 @@ export default class NodeBox extends React.Component {
                         };
                         return endpoints;
                     }, {});
-
+                console.log(endpoints)
                 this.setState({
                     endpoints,
                 });
