@@ -69,11 +69,11 @@ services:
         target: /app/templates/upstream_template.conf
       - source: location_template.conf
         target: /app/templates/location_template.conf
-    depends_on:
-      - redis
-    configs:
       - source: boss.config
         target: /app/config.py
+    depends_on:
+      - redis
+
 # -------------------------------------------
   gui:
     image: qunis/ahub_gui
