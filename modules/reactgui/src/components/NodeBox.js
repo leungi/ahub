@@ -12,8 +12,8 @@ import {get} from '../modules/fetch';
 import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/JSONPretty.monikai.styl';
 
-const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
-//const API_ENDPOINT = 'http://127.0.0.1:8000/';
+//const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
+const API_ENDPOINT = window.location.href
 
 export default class NodeBox extends React.Component {
     constructor(props) {

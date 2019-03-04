@@ -1,0 +1,1 @@
+docker -H localhost:2376 stack deploy -c ahub_on_azure_aad_certbot_reactgui.yml ahub

@@ -11,17 +11,19 @@ import {
 import { get } from '../modules/fetch';
 import MainNavLink from './MainNavLink';
 import NodeBox from './NodeBox';
-import Debug from './Debug'
+import Debug from './Debug';
+import AhubLogo from '../assets/ahub_logo.png';
 
-const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
-//const API_ENDPOINT = 'localhost:8000';
+
+//const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
+const API_ENDPOINT = window.location.href
 
 const theme = {
     global: {
         colors: {
-            brand: '#003E81',
-            'accent-1': '#009EDA',
-            'neutral-1': '#000',
+            brand: '#f8f8f8',
+            'accent-1': '#009fe3',
+            'neutral-1': '#aaa',
         },
         font: {
             family: 'Roboto',
@@ -71,8 +73,8 @@ export default class AhubGUI extends React.Component {
                             pad='medium'
                         >
                             <Box>
-                                <Image
-                                    src='https://qunis.de/wordpress-qunis/wp-content/themes/qunis-theme-2016/images/interface/qunis-big-data-logo-w2x.png'
+                                <Image className='logo'
+                                    src={AhubLogo}
                                 />
                             </Box>
                             <Box

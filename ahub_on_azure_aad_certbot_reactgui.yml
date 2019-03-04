@@ -79,7 +79,7 @@ services:
 
 # -------------------------------------------
   gui:
-    image: qunis/ahub_gui
+    image: qunis/ahub_reactgui
 # -------------------------------------------
   updater:
     image: qunis/ahub_updater
@@ -101,7 +101,7 @@ services:
         
 configs:
   nginx_template.conf:
-    file: ./configs/nginx_template_azure_aad_certbot.conf
+    file: ./configs/nginx_template_azure_aad_certbot_reactgui.conf
   upstream_template.conf:
     file: ./configs/upstream_template.conf
   location_template.conf:
