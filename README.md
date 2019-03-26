@@ -24,7 +24,7 @@ docker stack deploy -c .\ahub.yml ahub
 ```
 The docker daemon then loads all images from the public image registry at [docker hub](https://hub.docker.com) and starts all services.
 
-You can test the deployed application at http://localhost/ to access the GUI. As the SSL certificate if self-signed, you need to skip the browser warning. 
+You can test the deployed application at http://localhost/ to access the GUI. As the SSL certificate is self-signed, you need to skip the browser warning. 
 
 The user credentials for the basic authentication are:
 
