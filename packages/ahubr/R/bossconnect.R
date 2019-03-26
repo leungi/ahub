@@ -7,8 +7,9 @@
 
 .ahubEnv$debug <- FALSE
 
-.ahubEnv$debughost <- 'ahub.westeurope.cloudapp.azure.com'
+.ahubEnv$debughost <- 'localhost'
 .ahubEnv$host <- 'nginx'
+.ahubEnv$port <- 8000
 .ahubEnv$boss_init <- FALSE
 .ahubEnv$redis_init <- FALSE
 .ahubEnv$future_init <- FALSE
@@ -25,7 +26,7 @@
 
 init_boss_api <- function(
     host = ifelse(.ahubEnv$debug, .ahubEnv$debughost, .ahubEnv$host),
-    port = 8000
+    port = .ahubEnv$port
     ){
     if(!.ahubEnv$boss_init){
         boss_api <- get_node_api('boss', host = host, port = port)
