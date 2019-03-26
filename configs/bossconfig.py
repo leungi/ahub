@@ -8,7 +8,7 @@ NGINXHOST = 'nginx'
 DEBUGHOST = 'ahub.westeurope.cloudapp.azure.com'
 
 # to let the get-service function know, which nodes it does not need to check
-AHUBSTACK = ['boss', 'gui', 'portainer', 'redis', 'nginx', 'updater', 'aad-auth']
+AHUBSTACK = ['boss', 'gui', 'portainer', 'redis', 'nginx', 'updater', 'aad-auth', 'certbot']
 
 # Configure Swagger
 SWAGGER = {

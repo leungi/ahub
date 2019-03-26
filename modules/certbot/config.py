@@ -1,14 +1,7 @@
-# Main config for AHUB Boss
+CERTHOST = 'ahub.westeurope.cloudapp.azure.com'
+CERTEMAIL = 'martin.hanewald@qunis.de'
 
-BOSSPORT = 8000
-REDISHOST = "redis"
-DOCKERHOST = 'unix://var/run/docker.sock'
-NGINXHOST = 'nginx'
-
-DEBUGHOST = 'ahub.westeurope.cloudapp.azure.com'
-
-# to let the get-service function know, which nodes it does not need to check
-AHUBSTACK = ['boss', 'gui', 'portainer', 'redis', 'nginx', 'updater', 'aad-auth']
+PORT = 8000
 
 # Configure Swagger
 SWAGGER = {

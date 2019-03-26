@@ -6,7 +6,15 @@
 /modules/boss/.idea
 /modules/boss/__pycache__
 /.idea
+/.vscode
+/modules/reactgui/node_modules
 /packages/ahubr/..Rcheck
 /packages/ahubr/*.Rhistory
 /packages/ahubr/*.Rproj
-
+/data
+/modules/updater/__pycache__
+/modules/aad-auth/config.py
+__pycache__
+.idea
+/configs/aadconfig.py
+/modules/aad-auth/aadconfig.py

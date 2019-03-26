@@ -23,13 +23,14 @@ class Checker:
             self.log.error('Could not establish connection to boss.')
             return apis
 
-        newapis = json.loads(ans.content)['apis']
+        raw = json.loads(ans.content)
+        newapis = list(set(raw['apis']).union(raw['html']))
         for a in newapis:
             if a not in apis:
                 found = True
-                self.log.info('New api found: {0}'.format(a))
+                self.log.error('New api found: {0}'.format(a))
         if found:
-            self.log.info('Updating nginx config.')
+            self.log.error('Updating nginx config.')
             try:
                 requests.get('http://{0}:{1}/boss/update_nginx'.format(config.NGINXHOST, config.BOSSPORT))
             except requests.RequestException:

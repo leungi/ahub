@@ -7,9 +7,13 @@ div {
     /*padding: 10px;*/
 }
 
+.logo{
+  height: 130px;
+}
+
 .nodebox {
     background-color: #ece7f2;
-    width: 300px;
+    width: 100px;
     height: auto;
     margin: 10px;
     border: 1px solid #999;
@@ -53,7 +57,7 @@ div {
 }
 
 #sidebar {
-    background: #2b8cbe;
+    background: #ffffff; /* #2b8cbe;*/
     color: #fff;
     transition: all 0.3s;
     min-width: 250px;
@@ -65,9 +69,10 @@ div {
     margin-left: -250px;
 }
 
+
 body {
     font-family: 'Poppins', sans-serif;
-    background: #fafafa;
+    background-color: #ffffff !important; /*#fafafa;*/
 }
 
 p {

@@ -65,7 +65,8 @@ def update_nginx(client, debug=False):
     if debug:
         nodes = ['node1', 'node2']
     else:
-        nodes = get_services(client, debug)['apis']
+        raw = get_services(client, debug)
+        nodes = list(set(raw['apis']).union(raw['html']))
 
     newconfdata = create_config(nodes)
     print(newconfdata["config"])
