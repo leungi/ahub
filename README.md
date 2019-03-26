@@ -1,10 +1,8 @@
 
-![alt](figures/ahub_logo.png)
-
 # Introduction 
 AHUB is a framework for deploying analytical application inside docker containers.
 
-![alt](figures/framework_overview.png)
+![alt](figures/QUNIS-AHUB-Framework_Architektur.jpg)
 
 The framework aims at providing a unified approach to run scripts in any language (R, Python, etc...) while offering common services for most deployment scenarios:
 
