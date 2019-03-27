@@ -6,12 +6,17 @@ services:
 # -------------------------------------------
   node1:
     image: qunis/ahub_rnode
+
 # -------------------------------------------
   node2:
-    image: qunis/ahub_rnode
+    image: qunis/ahub_rnode 
+    deploy:
+      replicas: 1
+
 # -------------------------------------------
   node3:
     image: qunis/prophetdemo
+    
 # -------------------------------------------
 
 # -------------------------------------------
@@ -68,8 +73,6 @@ services:
     configs:
       - source: nginx_template.conf
         target: /app/templates/nginx_template.conf
-      - source: upstream_template.conf
-        target: /app/templates/upstream_template.conf
       - source: location_template.conf
         target: /app/templates/location_template.conf
       - source: boss.config
@@ -102,8 +105,6 @@ services:
 configs:
   nginx_template.conf:
     file: ./configs/nginx_template_azure_aad_certbot_reactgui.conf
-  upstream_template.conf:
-    file: ./configs/upstream_template.conf
   location_template.conf:
     file: ./configs/location_template.conf
   aad-auth.config:

@@ -18,4 +18,4 @@ ADD *.py /app/
 
 
 # Run app.py when the container launches
-CMD ["python", "updater.py"]
+CMD ["python", "app.py"]

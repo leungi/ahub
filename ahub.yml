@@ -53,16 +53,16 @@ services:
         constraints: [node.role == manager]
 # -------------------------------------------
   boss:
-    image: qunis/ahub_boss:1.0
+    image: qunis/ahub_boss:1.0.1
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     configs:
       - source: nginx_template.conf
         target: /app/templates/nginx_template.conf
-      - source: upstream_template.conf
-        target: /app/templates/upstream_template.conf
       - source: location_template.conf
         target: /app/templates/location_template.conf
+      - source: boss.config
+        target: /app/config.py
     depends_on:
       - redis
 # -------------------------------------------
@@ -90,10 +90,10 @@ services:
 configs:
   nginx_template.conf:
     file: ./configs/nginx_template.conf
-  upstream_template.conf:
-    file: ./configs/upstream_template.conf
   location_template.conf:
     file: ./configs/location_template.conf
+  boss.config:
+    file: ./configs/bossconfig.py
 
 secrets:
   server.crt:
