@@ -1,7 +1,8 @@
+
 # Introduction 
 AHUB is a framework for deploying analytical application inside docker containers.
 
-![alt](figures/framework_overview.png)
+![alt](figures/QUNIS-AHUB-Framework_Architektur.jpg)
 
 The framework aims at providing a unified approach to run scripts in any language (R, Python, etc...) while offering common services for most deployment scenarios:
 
@@ -16,19 +17,14 @@ For running the demo environment you need to install docker. Please follow the o
 
 [Install Docker!](https://www.docker.com/get-started)
 
-Once docker is running (make sure it is configured to run "Linux containers"), you can run the demo on bash or powershell with the following command (when in the cloned main folder).
+Once docker is running (when using Docker for Windows make sure it is configured to run "Linux containers"), you can run the demo with the following command (when in the cloned main folder).
 
 ```(powershell)
-docker stack deploy -c .\docker-compose.yml ahub
+docker stack deploy -c .\ahub.yml ahub
 ```
-
-Alternatively on Windows you can just use the Powershell script *deploy.ps* in the main folder.
-
 The docker daemon then loads all images from the public image registry at [docker hub](https://hub.docker.com) and starts all services.
 
-You can test the deployed application at http://localhost/ to access the GUI. As the SSL certificate if self-signed, you need to skip the browser warning. 
-
-![SSL warning](figures/sslwarning.png)
+You can test the deployed application at http://localhost/ to access the GUI. As the SSL certificate is self-signed, you need to skip the browser warning. 
 
 The user credentials for the basic authentication are:
 

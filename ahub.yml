@@ -4,16 +4,24 @@ services:
 # -------------------------------------------
 # NODE STACK (add analytical modules here)
 # -------------------------------------------
+# For compatibility with AHUB, container images
+# need to comply with the following:
+#   - publish a REST API on port 8000
+#   - provide a swagger.json file in the "/" path
+# -------------------------------------------
+
   node1:
     image: qunis/ahub_rnode:1.0
 
 # -------------------------------------------
+  
   node2:
     image: qunis/ahub_rnode:1.0
     deploy:
       replicas: 1
 
 # -------------------------------------------
+  
   node3:
     image: qunis/prophetdemo
     
@@ -67,7 +75,7 @@ services:
       - redis
 # -------------------------------------------
   gui:
-    image: qunis/ahub_gui:1.0
+    image: qunis/ahub_reactgui:1.0
  # -------------------------------------------
   updater:
     image: qunis/ahub_updater:1.0
