@@ -11,6 +11,8 @@ The framework aims at providing a unified approach to run scripts in any languag
 - process management and logging functionality
 - easy scalability
 
+Docker swarm is able to run a collection of containers simultaneously such that they can communicate with each other over a shared virtual network. Docker swarm has a multitude of features which makes it a powerful tool even in large scale deployment. AHUB provides a pre-configured swarm setup to deploy analytical containers (based on R or any other language) with minimal effort.
+
 # Getting Started
 
 ## Generating certificates and user credentials
