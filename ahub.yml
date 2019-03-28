@@ -7,7 +7,7 @@ services:
 # For compatibility with AHUB, container images
 # need to comply with the following:
 #   - publish a REST API on port 8000
-#   - provide a swagger.json file in the "/" path
+#   - provide a swagger.json file in the "/" path (only for GUI)
 # -------------------------------------------
 
   node1:
@@ -16,9 +16,7 @@ services:
 # -------------------------------------------
   
   node2:
-    image: qunis/ahub_rnode:1.0
-    deploy:
-      replicas: 1
+    image: qunis/plumberdemo
 
 # -------------------------------------------
   
