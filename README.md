@@ -19,7 +19,7 @@ Docker swarm is able to run a collection of containers simultaneously such that 
 
 AHUB comes with a pre-generated certificate and password file. But of course you want to change these. This is very quickly done, with two little helper containers. All you need to do is navigate to the subfolder *./configs* and run the following commands (please fill in your username and password). This will create a new **SSL certificate and key** along with a **.htpasswd file** containing the MD5 hashed credentials for your user in the subfolder *./configs*.
 
-```(powershell)
+```bash
 docker run --mount type=bind,src=$pwd,dst=/var qunis/openssl
 docker run --mount type=bind,src=$pwd,dst=/var qunis/htpasswd username password
 ```
@@ -30,7 +30,7 @@ Docker swarm operates with a recipe, telling it which containers to spin up, whi
 
 Please inspect the demo file in the main folder
 
-```(yaml)
+```yaml
 version: '3.3'
 services:
 
@@ -92,16 +92,16 @@ For now you can either leave the demo file as is or add/substitute your own cont
 
 **Note:** There is no need to configure nginx when adding containers in the node stack. This is all taken care of by AHUB.Ramping up the swarmBefore we launch AHUB we need to prepare the docker daemon to run in swarm mode:
 
-```{bash}
+```bash
 > docker swarm init
 Swarm initialized: current node (XXX) is now a manager.
 ```
 The whole stack can be launched by docker in swarm mode with the following command
-```{bash}
+```bash
 docker stack deploy -c ./ahub.yaml mystack
 ```
 This command references the Compose file *ahub.yaml* to deploy a stack called *mystack*. Of course you can change the name of your stack to your liking.You should see the following output on the shell:
-```{bash}
+```bash
 > docker stack deploy -c ./ahub.yaml mystack
 
 Creating network mystack_default
@@ -140,4 +140,4 @@ There is also a rudimentary GUI at https://localhost (still under development) s
 
 # Contribute
 
-Please get in contact with me at mailto:martin.hanewald@qunis.de if you are interested in contributing. I am especially looking for a frontend developer. So if your are keen on ReactJS, give me a shout.
+Please get in contact with me at [martin.hanewald@qunis.de](mailto:martin.hanewald@qunis.de) if you are interested in contributing. I am especially looking for a frontend developer. So if you are keen on ReactJS, give me a shout.
