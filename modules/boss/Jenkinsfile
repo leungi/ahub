@@ -10,8 +10,9 @@ node {
     stage('Build image') {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
-
-        app = docker.build("qunis/jenkinstest")
+        dir("modules/boss") {
+            app = docker.build("qunis/jenkinstest")
+        }
     }
 
     stage('Test image') {
