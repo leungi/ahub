@@ -13,7 +13,7 @@ import JSONPretty from 'react-json-pretty';
 import 'react-json-pretty/JSONPretty.monikai.styl';
 
 //const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
-const API_ENDPOINT = window.location.href
+const API_ENDPOINT = window.location.origin
 
 export default class NodeBox extends React.Component {
     constructor(props) {
@@ -43,7 +43,7 @@ export default class NodeBox extends React.Component {
     }
 
     getEndpoints() {
-        get(`${API_ENDPOINT}${this.props.name}/swagger.json`)
+        get(`${API_ENDPOINT}/${this.props.name}/swagger.json`)
             .then(response => {
                 console.log(response);
 
@@ -103,7 +103,7 @@ export default class NodeBox extends React.Component {
                 }, '');
         }
 
-        get(`${API_ENDPOINT}${this.props.name}/${endpointName}${queryPartsString}`)
+        get(`${API_ENDPOINT}/${this.props.name}${endpointName}${queryPartsString}`)
             .then(response => {
                 const newEndpointState = {
                     ...this.state.endpoints,

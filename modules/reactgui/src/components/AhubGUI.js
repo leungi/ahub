@@ -16,7 +16,7 @@ import AhubLogo from '../assets/ahub_logo.png';
 
 
 //const API_ENDPOINT = 'http://ahub.westeurope.cloudapp.azure.com:8000/';
-const API_ENDPOINT = window.location.href
+const API_ENDPOINT = window.location.origin
 
 const theme = {
     global: {
@@ -42,7 +42,7 @@ export default class AhubGUI extends React.Component {
     }
 
     componentDidMount() {
-        get(`${API_ENDPOINT}boss/get_services`)
+        get(`${API_ENDPOINT}/boss/get_services`)
             .then(response => this.setState({ nodes: response.apis }))
             .catch(err => {
                 console.warn(err);

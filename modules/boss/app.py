@@ -1,29 +1,18 @@
 import json
-
-import docker
 from flasgger import Swagger
 from flask import Flask, request, Response
 from flask_cors import CORS
 
 # local imports
-from ahubdocker import *
+from ahubmain import Ahub
 from ahubredis import AhubRedis
 
 # ----------------------------------------------------------
 # REDIS AND DOCKER
 # ----------------------------------------------------------
 
-DEBUG = False
-
-# set hostnames in case of local debugging
-if DEBUG:
-    config.REDISHOST = config.DEBUGHOST
-    config.DOCKERHOST = 'localhost:2376'
-    config.NGINXHOST = config.DEBUGHOST
-
-# Init docker and redis objects
-client = docker.DockerClient(base_url=config.DOCKERHOST)
-ar = AhubRedis(config.REDISHOST)
+ahub = Ahub()
+ar = AhubRedis()
 
 
 # ----------------------------------------------------------
@@ -35,11 +24,27 @@ class JSONResponse(Response):
     default_mimetype = 'application/json'
 
 
+# Configure Swagger
+SWAGGER = {
+    "headers": [],
+    "specs": [
+        {
+            "endpoint": 'swagger',
+            "route": '/swagger.json',
+            "rule_filter": lambda rule: True,  # all in
+            "model_filter": lambda tag: True,  # all in
+        }
+    ],
+    "static_url_path": "/flasgger_static",
+    # "static_folder": "static",  # must be set by user
+    "swagger_ui": True,
+    "specs_route": "/__swagger__/"
+}
 app = Flask(__name__)
 
 CORS(app)  # activate CORS
 app.response_class = JSONResponse
-swagger = Swagger(app, config=config.SWAGGER)
+swagger = Swagger(app, config=SWAGGER)
 
 
 # ----------------------------------------------------------
@@ -49,13 +54,22 @@ swagger = Swagger(app, config=config.SWAGGER)
 
 # DOCKER ENDPOINTS
 
+@app.route("/reload")
+def reload_api():
+    """reload
+        ---
+        parameters: []
+        """
+    return json.dumps(ahub.reload())
+
+
 @app.route("/get_services")
 def get_services_api():
     """get_services
         ---
         parameters: []
         """
-    return json.dumps(get_services(client))
+    return json.dumps(ahub.get_services())
 
 
 @app.route("/update_nginx")
@@ -64,8 +78,24 @@ def update_nginx_api():
         ---
         parameters: []
         """
-    return json.dumps(update_nginx(client))
+    return json.dumps(ahub.update_nginx())
 
+
+@app.route("/check_certificate")
+def check_certificate_api():
+    """check_certificate
+        ---
+        parameters: []
+        """
+    return json.dumps(ahub.check_certificate())
+
+@app.route("/report_health")
+def report_health_api():
+    """report_health
+        ---
+        parameters: []
+        """
+    return json.dumps(ahub.report_health())
 
 # REDIS ENDPOINTS
 
@@ -227,4 +257,4 @@ def redisflush():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=config.BOSSPORT)
+    app.run(host='0.0.0.0', port=8000)

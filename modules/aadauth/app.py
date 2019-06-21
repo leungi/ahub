@@ -3,8 +3,8 @@ import flask
 from flask import Response
 import uuid
 import requests
-import aadconfig
 import logging
+import yaml
 
 logging.basicConfig(format='%(levelname)s %(asctime)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
 
@@ -12,15 +12,29 @@ app = flask.Flask(__name__)
 app.debug = False
 app.secret_key = 'cdb94faf-f582-44c8-9413-812c3b67f3ff'
 
-debug = False
+
+def read_config():
+    """
+    Read the ahub general config file
+    """
+    ans = {}
+    with open("config.yaml", 'r') as stream:
+        try:
+            ans = yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(format(exc))
+    return ans
+
+
+config = read_config()
+debug = config['DEBUGMODE']
 
 if debug:
-    aadconfig.REDIRECT_HOST = 'localhost:8000'
-    aadconfig.NGINXHOST = 'ahub.westeurope.cloudapp.azure.com'
-    aadconfig.SCHEME = 'http'
+    config['AAD_REDIRECT_HOST'] = 'localhost:8000'
+    config['AAD_SCHEME'] = 'http'
 
-AUTHORITY_URL = aadconfig.AUTHORITY_HOST_URL + '/' + aadconfig.TENANT
-REDIRECT_URI = f'{aadconfig.SCHEME}://{aadconfig.REDIRECT_HOST}/authorize'
+AUTHORITY_URL = config['AAD_AUTHORITY_HOST_URL'] + '/' + config['AAD_TENANT']
+REDIRECT_URI = f'{config["AAD_SCHEME"]}://{config["AAD_REDIRECT_HOST"]}/authorize'
 TEMPLATE_AUTHZ_URL = ('https://login.microsoftonline.com/{}/oauth2/authorize?' +
                       'response_type=code&client_id={}&redirect_uri={}&' +
                       'state={}&resource={}')
@@ -43,11 +57,11 @@ def login():
     auth_state = str(uuid.uuid4())
     flask.session['state'] = auth_state
     authorization_url = TEMPLATE_AUTHZ_URL.format(
-        aadconfig.TENANT,
-        aadconfig.CLIENT_ID,
+        config['AAD_TENANT'],
+        config['AAD_CLIENT_ID'],
         REDIRECT_URI,
         auth_state,
-        aadconfig.RESOURCE)
+        config['AAD_RESOURCE'])
     resp = Response(status=200)
     resp.headers['Location'] = authorization_url
     return f'<script>window.location.replace("{authorization_url}")</script>'
@@ -62,8 +76,9 @@ def getatoken():
     if state != flask.session['state']:
         raise ValueError("State does not match")
     auth_context = adal.AuthenticationContext(AUTHORITY_URL)
-    token_response = auth_context.acquire_token_with_authorization_code(code, REDIRECT_URI, aadconfig.RESOURCE,
-                                                                        aadconfig.CLIENT_ID, aadconfig.CLIENT_SECRET)
+    token_response = auth_context.acquire_token_with_authorization_code(code, REDIRECT_URI, config['AAD_RESOURCE'],
+                                                                        config['AAD_CLIENT_ID'],
+                                                                        config['AAD_CLIENT_SECRET'])
     # It is recommended to save this to a database when using a production app.
     flask.session['access_token'] = token_response['accessToken']
 
@@ -75,8 +90,8 @@ def getatoken():
 def graphcall():
     if 'access_token' not in flask.session:
         return flask.Response(status=401)
-    endpoint = aadconfig.RESOURCE + '/' + aadconfig.API_VERSION + '/me/memberof'
-    endpoint2 = aadconfig.RESOURCE + '/' + aadconfig.API_VERSION + '/me'
+    endpoint = config['AAD_RESOURCE'] + '/' + config['AAD_API_VERSION'] + '/me/memberof'
+    endpoint2 = config['AAD_RESOURCE'] + '/' + config['AAD_API_VERSION'] + '/me'
     http_headers = {'Authorization': 'Bearer ' + flask.session.get('access_token'),
                     'User-Agent': 'adal-python-sample',
                     'Accept': 'application/json',
@@ -88,9 +103,9 @@ def graphcall():
     if 'error' in group_data:
         return login()
 
-    if aadconfig.AUTH_GROUP in [k['displayName'] for k in group_data['value']]:
+    if config['AAD_AUTH_GROUP'] in [k['displayName'] for k in group_data['value']]:
         template = 'Login successful for user {0} in group {1}.'
-        msg = template.format(me_data['displayName'], aadconfig.AUTH_GROUP)
+        msg = template.format(me_data['displayName'], config['AAD_AUTH_GROUP'])
         logging.info(msg)
         return flask.Response(status=200)
     else:
@@ -103,4 +118,4 @@ def success():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=aadconfig.PORT)
+    app.run(host="0.0.0.0", port=8000)

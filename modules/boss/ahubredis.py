@@ -1,6 +1,7 @@
 import logging
 import pandas as pd
 import datetime
+import yaml
 from redis import Redis, RedisError
 
 
@@ -37,8 +38,29 @@ def get_current_time():
 
 
 class AhubRedis:
-    def __init__(self, host):
-        self.rediscon = Redis(host=host, db=0, socket_connect_timeout=2, socket_timeout=2)
+    def __init__(self):
+
+        self.config = {}
+        self.read_config()
+        self.debug = self.config['DEBUGMODE']
+        if self.debug:
+            self.redishost = self.config['DEBUGHOST']
+        else:
+            self.redishost = 'redis'
+        self.rediscon = Redis(host=self.redishost, db=0, socket_connect_timeout=2, socket_timeout=2)
+
+        if self.redis_status()['online']:
+            print('Redis connection established.')
+        else:
+            print('Redis connection failed.')
+
+    def read_config(self):
+        """Read the ahub general config file"""
+        with open("config.yaml", 'r') as stream:
+            try:
+                self.config = yaml.safe_load(stream)
+            except yaml.YAMLError as exc:
+                print(format(exc))
 
     # log a message to redis for given pid
     def pid_log(self, pid, msg, level='INFO'):
