@@ -69,6 +69,51 @@ class Ahub(object):
 
         return True
 
+    def validate_config(self):
+        print('Validating config...')
+        flag = True
+        if self.config['VERSION'] in ['2.0']:
+            print('Please select valid VERSION (currently only 2.0)')
+            flag = False
+
+        if self.config['TLS_TYPE'] not in ['letsencrypt', 'self-signed']:
+            print('Please choose valid TLS_TYPE (letsencrypt or self-signed)')
+            flag = False
+
+        if self.config['TLS_TYPE'] == 'letsencrypt':
+            necessary = ['TLS_HOST', 'TLS_EMAIL']
+            for k in necessary:
+                if k not in self.config.keys():
+                    print('You have chosen TLS_TYPE letsencrypt. Please provide mandatory config field: ' + k)
+                    flag = False
+
+        if self.config['AUTH_TYPE'] not in ['none', 'basic', 'aad']:
+            print('Please choose valid AUTH_TYPE (none, basic or aad')
+            flag = False
+
+        if self.config['AUTH_TYPE'] == 'aad':
+            necessary = ['AAD_RESOURCE', 'AAD_TENANT', 'AAD_AUTHORITY_HOST_URL', 'AAD_CLIENT_ID',
+                         'AAD_CLIENT_SECRET', 'AAD_REDIRECT_HOST', 'AAD_SCHEME', 'AAD_AUTH_GROUP',
+                         'AAD_API_VERSION']
+            for k in necessary:
+                if k not in self.config.keys():
+                    print('You have chosen AUTH_TYPE aad. Please provide mandatory config field: ' + k)
+                    flag = False
+
+        if self.config['OPEN_8000']:
+            print('WARNING: Port 8000 is open for all services. Only for debugging purposes.')
+
+        if self.config['OPEN_9000']:
+            print('WARNING: Port 9000 is open on portainer. Only for debugging purposes.')
+
+        if self.config['OPEN_6379']:
+            print('WARNING: Port 6379 is open on redis. Only for debugging purposes.')
+
+        if not flag:
+            print('Config errors have been found. AHUB launch has been aborted.')
+
+        return flag
+
     def get_nginx_status(self):
         """
         Polls the status of the nginx service
@@ -121,7 +166,11 @@ class Ahub(object):
             try:
                 self.config = yaml.safe_load(stream)
             except yaml.YAMLError as exc:
+                print('Config file could not be read.')
                 print(format(exc))
+
+        return self.validate_config()
+
 
     def check_docker(self):
         """
@@ -315,10 +364,16 @@ class Ahub(object):
 
     def create_volumes(self):
         """Create all necessary volumes"""
-        self.volumes = []
-        for v in ['tls', 'portainer', 'redis']:
-            self.dockerclient.volumes.create(v)
-            self.volumes.append(v)
+        try:
+            self.volumes = []
+            for v in ['tls', 'portainer', 'redis']:
+                self.dockerclient.volumes.create(v)
+                self.volumes.append(v)
+        except Exception:
+            print('Volume creation has failed.')
+            return False
+        else:
+            return True
 
     def stop_service(self, name):
         """Stop a given service"""

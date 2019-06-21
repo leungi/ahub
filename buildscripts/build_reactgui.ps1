@@ -5,6 +5,11 @@ param (
 $lwd = $pwd
 
 cd ./modules/reactgui
+
+if(!(Test-Path node_modules)){
+    npm install
+}
+
 npm run-script build
 Copy-Item ./Dockerfile -destination .\build\Dockerfile
 cd $lwd

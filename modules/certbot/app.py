@@ -13,12 +13,6 @@ with open("config.yaml", 'r') as stream:
     except yaml.YAMLError as exc:
         print(format(exc))
 
-OPENSSLCMD = f'openssl req -x509 -newkey rsa:4096 -keyout /etc/letsencrypt/key.pem \
-    -out /etc/letsencrypt/cert.pem -days 365 -nodes -batch'
-
-CERTBOTCMD = f'certbot certonly --standalone -n \
-    -d {config["TLS_HOST"]} \
-    -m {config["TLS_EMAIL"]} --agree-tos'
 
 # ----------------------------------------------------------
 # FLASK
@@ -63,6 +57,9 @@ def openssl():
         ---
         parameters: []
         """
+    OPENSSLCMD = f'openssl req -x509 -newkey rsa:4096 -keyout /etc/letsencrypt/key.pem \
+        -out /etc/letsencrypt/cert.pem -days 365 -nodes -batch'
+
     thiscmd = OPENSSLCMD
     print('Running command ' + thiscmd)
     ans = os.popen(thiscmd).read()
@@ -80,6 +77,11 @@ def letsencrypt():
             in: query
             required: false
         """
+
+    CERTBOTCMD = f'certbot certonly --standalone -n \
+        -d {config["TLS_HOST"]} \
+        -m {config["TLS_EMAIL"]} --agree-tos'
+
     dry_run = request.args.get('dry_run', default=False, type=bool)
     test_cert = request.args.get('test_cert', default=False, type=bool)
     thiscmd = CERTBOTCMD
