@@ -1,4 +1,0 @@
-adal
-flask
-requests
-pyyaml

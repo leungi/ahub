@@ -1,1 +1,0 @@
-docker -H localhost:2376 stack deploy -c ahub_on_azure_raw.yml ahub

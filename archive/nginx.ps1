@@ -1,1 +1,0 @@
-docker run --rm -p 8000:8000 -v "$pwd/configs/nginx_aad.conf:/etc/nginx/nginx.conf" nginx 

@@ -1,8 +1,0 @@
-redis
-flask
-pandas
-numpy
-flasgger
-docker
-flask-cors
-requests

@@ -1,1 +1,0 @@
-docker stack deploy -c ahub.yml ahub
