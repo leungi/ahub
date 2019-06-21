@@ -257,7 +257,7 @@ class Ahub(object):
 
     def create_certbot(self):
         cref = self.get_config_reference()
-        self.dockerclient.services.create(image='qunis/ahub_certbot',
+        self.dockerclient.services.create(image='qunis/ahub_certbot:{0}'.format(str(self.config['VERSION'])),
                                           name='certbot',
                                           networks=['ahub_default'],
                                           env=['PYTHONUNBUFFERED=1'],
@@ -283,7 +283,7 @@ class Ahub(object):
 
     def create_scheduler(self):
         cref = self.get_config_reference()
-        self.dockerclient.services.create(image='qunis/ahub_scheduler',
+        self.dockerclient.services.create(image='qunis/ahub_scheduler:{0}'.format(str(self.config['VERSION'])),
                                           name='scheduler',
                                           networks=['ahub_default'],
                                           env = ['PYTHONUNBUFFERED=1'],
@@ -294,7 +294,7 @@ class Ahub(object):
 
     def create_aadauth(self):
         cref = self.get_config_reference()
-        self.dockerclient.services.create(image='qunis/ahub_aadauth',
+        self.dockerclient.services.create(image='qunis/ahub_aadauth:{}'.format(str(self.config['VERSION'])),
                                           name='aadauth',
                                           networks=['ahub_default'],
                                           env=['PYTHONUNBUFFERED=1'],
@@ -305,7 +305,7 @@ class Ahub(object):
 
     def create_gui(self):
         cref = self.get_config_reference()
-        self.dockerclient.services.create(image='qunis/ahub_reactgui',
+        self.dockerclient.services.create(image='qunis/ahub_reactgui:{}'.format(str(self.config['VERSION'])),
                                           name='gui',
                                           networks=['ahub_default'],
                                           labels={'com.docker.stack.image': 'qunis/ahub_reactgui',
