@@ -18,3 +18,4 @@ __pycache__
 .idea
 /configs/aadconfig.py
 /modules/aad-auth/aadconfig.py
+/modules/reactgui/build

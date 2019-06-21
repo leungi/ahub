@@ -1,0 +1,59 @@
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+# AHUB CONFIG FILE
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+VERSION: 2.0
+
+
+# --------------------------------------------------------------------
+# TLS / SSL (Encryption)
+# --------------------------------------------------------------------
+# Currently the following encryption methods are supported
+#   self-signed:    A self-signed certificate will be created by ahub. 
+#                   This leads to browser warning, which can be skipped.
+#   letsencrypt:    AHUB will automatically apply for a certificate from
+#                   Let's Encrypt certificate authority. For this to work
+#                   you need to deploy AHUB on a public machine and provide
+#                   a fully qualified domain name (FQDN).
+TLS_TYPE: self-signed 
+
+# -- optional -- (for TLS_TYPE: letsencrypt)
+#TLS_HOST: myserver.cloud.com  # the public domain name (FQDN) 
+                                              # you want to apply the certificate for
+#TLS_EMAIL: me@cloud.com # contact email-address
+
+
+# --------------------------------------------------------------------
+# Authentication
+# --------------------------------------------------------------------
+# Currently the following authentication methods are supported
+#   none:       Authentication disabled
+#   basic:      HTTP Basic Authentication with username and password
+#   aad:        Authentication via Azure Active Directory
+# when choosing 'basic' you need to provide a file '.htpasswd' in the folder ./configs
+AUTH_TYPE: basic
+
+# -- optional -- (for AUTH_TYPE: aad) Azure Active Directory
+#AAD_RESOURCE: https://graph.microsoft.com  # Add the resource you want the access token for
+#AAD_TENANT: mytenant.de  # Enter tenant name, e.g. contoso.onmicrosoft.com
+#AAD_AUTHORITY_HOST_URL: https://login.microsoftonline.com
+#AAD_CLIENT_ID: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  # copy the Application ID of your app from your Azure portal
+#AAD_CLIENT_SECRET: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  # copy the value of key you generated when setting up the application
+#AAD_REDIRECT_HOST: myserver.cloud.com
+#AAD_SCHEME: https
+#AAD_AUTH_GROUP: MySecurityGroup # group which should be granted access
+#AAD_API_VERSION: v1.0 # Microsoft Graph API version
+
+
+# --------------------------------------------------------------------
+# -- optional -- Debugging Config
+# --------------------------------------------------------------------
+# Handle with caution, only for development purposes. All ports below should be closed
+# in a production environment.
+DEBUGMODE: False
+DEBUGHOST: myserver.cloud.com
+OPEN_8000: False # this is a general port allowing access to all services without SSL and basic Auth
+OPEN_6379: False # this is the direct route to redis
+OPEN_9000: False # this is the direct route to portainer
+
