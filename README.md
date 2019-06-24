@@ -1,4 +1,4 @@
-*Attention: The main branch has been reduced to only contain the config files to run AHUB. The source code for all containers can be found under the dev branches.*
+*Attention: The master branch has been reduced to only contain the config files to run AHUB. The source code for all containers can now be found under the dev branches.*
 
 
 # Introduction 
