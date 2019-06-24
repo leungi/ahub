@@ -1,3 +1,5 @@
+*Attention: The main branch has been reduced to only contain the config files to run AHUB. The source code for all containers can be found under the dev branches.*
+
 
 # Introduction 
 AHUB is a framework for deploying analytical application inside docker containers.
@@ -15,23 +17,22 @@ Docker swarm is able to run a collection of containers simultaneously such that 
 
 # Getting Started
 
-## Generating certificates and user credentials
+## Generating user credentials
 
-AHUB comes with a pre-generated certificate and password file. But of course you want to change these. This is very quickly done, with two little helper containers. All you need to do is navigate to the subfolder *./configs* and run the following commands (please fill in your username and password). This will create a new **SSL certificate and key** along with a **.htpasswd file** containing the MD5 hashed credentials for your user in the subfolder *./configs*.
+For using the simple configuration with HTTP Basic Authentication AHUB comes with a pre-generated password file. But of course you want to create your own. This is very quickly done, with a helper container. All you need to do is run the following command in your cloned folder (please fill in your username and password). This will create a **.htpasswd file** containing the MD5 hashed credentials for your user.
 
 ```bash
-docker run --mount type=bind,src=$pwd,dst=/var qunis/openssl
 docker run --mount type=bind,src=$pwd,dst=/var qunis/htpasswd username password
 ```
 
 ## Configuring the stack
 
-Docker swarm operates with a recipe, telling it which containers to spin up, which ports to publish, which volumes to mount, et cetera. Everything you would normally  configure in a single "docker run ..." statement for a singular container instance, we instead write down in the so called **Compose file** when working with docker swarm. For a more detailed introduction see here. 
+Docker swarm operates with a recipe, telling it which containers to spin up, which ports to publish, which volumes to mount, et cetera. Everything you would normally  configure in a single "docker run ..." statement for a singular container instance, we instead write down in the so called **Compose file** when working with docker swarm. For a more detailed introduction see [here](https://docs.docker.com/engine/swarm/swarm-tutorial/). 
 
-Please inspect the demo file in the main folder
+Please inspect the demo compose file in the main folder
 
 ```yaml
-version: '3.3'
+vversion: '3.3'
 services:
 
 # -------------------------------------------
@@ -55,42 +56,95 @@ services:
   
   node3:
     image: qunis/prophetdemo
-    
+
+
 # -------------------------------------------
 # SERVICE STACK (DO NOT TOUCH)
 # -------------------------------------------
 
-  nginx:
-    image: nginx
-    ports:
-      - "80:80"
-      - "443:443"
+  boss:
+    image: qunis/ahub_boss:2.0
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
     configs:
-      - source: nginx_template.conf
-        target: /etc/nginx/nginx.conf
-    secrets:
-      - source: server.crt
-        target: server.crt
-      - source: server.key
-        target: server.key
-      - source: htpasswd
-        target: .htpasswd
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+      - source: main_config
+        target: /app/config.yaml
 
-...(continues)...
+
+# -------------------------------------------
+# CONFIGS & SECRETS
+# -------------------------------------------
+        
+configs:
+  main_config:
+    file: ./config.yaml
+
+secrets:
+  htpasswd:
+    file: ./.htpasswd
 
 ```
-The **first block** defines the **node stack**. Here you can add as many container images as you like. For compatibility with AHUB it is only required that plumber (or any other API) publishes on port 8000 and provides the Swagger definition file (if you want to use the GUI functionality). The latter is achieved by running the plumber *$run* command with parameter swagger=TRUE.
+
+The **first block** defines the **node stack**. Here you can add as many container images as you like or exchange the existing ones. For compatibility with AHUB it is only required that plumber (or any other API) publishes on port 8000 and provides the Swagger definition file (if you want to use the GUI functionality). The latter is achieved by running the plumber *$run* command with parameter swagger=TRUE.
 
 **Important:** The analytical nodes do not have to be R based. A python node running a combination of *flask/flasgger* would be compatible as well.
 
-The **second block** constitutes the **service stack** and does not need to be changed, if you stick to the basic scenario with self-signed certificates and basic authentication. Changes here need to be made if you want to use more elaborate functionality like auto-refreshing Let's Encrypt certificates or Active Directory Authentication. These use-cases will be covered in future tutorials.
+The **second block** is the companion container for running **AHUB**. This container will take care of ramping up all the sidecar containers of the service stack (like nginx, certbot, redis, gui, etc..) and configures them accordingly. 
 
-For now you can either leave the demo file as is or add/substitute your own container images in the node stack! 
+The **third block** references the main configuration file for **AHUB** (see next section) and your previously generated .htpasswd file.
 
-**Note:** There is no need to configure nginx when adding containers in the node stack. This is all taken care of by AHUB.Ramping up the swarmBefore we launch AHUB we need to prepare the docker daemon to run in swarm mode:
+For now you can either leave the demo compose file as is or add/substitute your own container images in the node stack! 
+
+## Configuring AHUB
+
+Please inspect the second YAML file in the main folder: **config.yaml**
+
+```yaml
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+# AHUB CONFIG FILE
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+VERSION: 2.0
+
+
+# --------------------------------------------------------------------
+# TLS / SSL (Encryption)
+# --------------------------------------------------------------------
+# Currently the following encryption methods are supported
+#   self-signed:    A self-signed certificate will be created by ahub. 
+#                   This leads to browser warning, which can be skipped.
+#   letsencrypt:    AHUB will automatically apply for a certificate from
+#                   Let's Encrypt certificate authority. For this to work
+#                   you need to deploy AHUB on a public machine and provide
+#                   a fully qualified domain name (FQDN).
+TLS_TYPE: self-signed 
+
+# -- optional -- (for TLS_TYPE: letsencrypt)
+#TLS_HOST: myserver.cloud.com  # the public domain name (FQDN) 
+                                              # you want to apply the certificate for
+#TLS_EMAIL: me@cloud.com # contact email-address
+
+
+# --------------------------------------------------------------------
+# Authentication
+# --------------------------------------------------------------------
+# Currently the following authentication methods are supported
+#   none:       Authentication disabled
+#   basic:      HTTP Basic Authentication with username and password
+#   aad:        Authentication via Azure Active Directory
+# when choosing 'basic' you need to provide a file '.htpasswd' in the main folder.
+AUTH_TYPE: basic
+
+(...continues...)
+```
+
+This file contains the configuration for authentication and encryption options. For Basic Authentication with username and password (with you previously generated .htpasswd file) and a self-signed certificate you can leave this as is. Otherwise change the settings according to the description in the config file.
+
+
+## Launching the stack
+
+Before we launch AHUB we need to prepare the docker daemon to run in swarm mode:
 
 ```bash
 > docker swarm init
@@ -105,24 +159,16 @@ This command references the Compose file *ahub.yaml* to deploy a stack called *m
 > docker stack deploy -c ./ahub.yaml mystack
 
 Creating network mystack_default
-Creating secret mystack_server.key
 Creating secret mystack_htpasswd
-Creating secret mystack_server.crt
-Creating config mystack_location_template.conf
-Creating config mystack_nginx_template.conf
-Creating config mystack_upstream_template.conf
-Creating service mystack_portainer
-Creating service mystack_node1
+Creating config mystack_main_config
 Creating service mystack_node2
 Creating service mystack_node3
-Creating service mystack_nginx
-Creating service mystack_redis
 Creating service mystack_boss
-Creating service mystack_gui
-Creating service mystack_updater
+Creating service mystack_node1
+
 >
 ```
-AHUB comes with an instance of **Portainer**, a very powerful browser-based container management tool. We can start checking if everything ramped up fine, by navigating to http://localhost::9000 (Portainer listens on this port). 
+AHUB comes with an instance of **Portainer**, a very powerful browser-based container management tool. We can start checking if everything ramped up fine, by navigating to http://localhost/portainer/ (the trailing slash is important!!!).
 
 As you are starting this cluster for the first time, you need to set an admin account and then choose the **Local mode**. After that you get to the Portainer main page, where you can click through the items Services, Containers and what else piques your interest. With Portainer you can do almost anything you can do from the docker command line interface.
 
@@ -133,7 +179,7 @@ Under the Services tab you should see 9 services if you stuck to the demo file. 
 ## Checking the API endpoints
 You can now navigate to your endpoints via https://localhost/{nodename}/{endpoint}?{parameters}. For example https://localhost/node2/plot or https://localhost/node3/?n=24. You will be warned by your browser about the insecure certificate (because we have self-signed it, skip this warning) and be asked for the user credentials.
 
-There is also a rudimentary GUI at https://localhost (still under development) showing you the various nodes and their endpoints so you can manually trigger a GET request for testing purposes.
+There is also a rudimentary GUI at https://localhost/gui/ (still under development) showing you the various nodes and their endpoints so you can manually trigger a GET request for testing purposes.
 
 ![alt](figures/gui.png)
 

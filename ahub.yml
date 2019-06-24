@@ -1,21 +1,28 @@
-version: '3.3'
+vversion: '3.3'
 services:
 
 # -------------------------------------------
 # NODE STACK (add analytical modules here)
 # -------------------------------------------
+# For compatibility with AHUB, container images
+# need to comply with the following:
+#   - publish a REST API on port 8000
+#   - provide a swagger.json file in the "/" path (only for GUI)
+# -------------------------------------------
+
   node1:
-    image: qunis/ahub_rnode:2.0
+    image: qunis/ahub_rnode:1.0
 
 # -------------------------------------------
+  
   node2:
-    image: qunis/ahub_rnode:2.0
+    image: qunis/plumberdemo
 
 # -------------------------------------------
+  
   node3:
     image: qunis/prophetdemo
-    
-# -------------------------------------------
+
 
 # -------------------------------------------
 # SERVICE STACK (DO NOT TOUCH)
@@ -30,9 +37,9 @@ services:
         target: /app/config.yaml
 
 
-# # -------------------------------------------
-# # CONFIGS & SECRETS
-# # -------------------------------------------
+# -------------------------------------------
+# CONFIGS & SECRETS
+# -------------------------------------------
         
 configs:
   main_config:
