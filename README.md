@@ -2,7 +2,7 @@
 
 
 # Introduction 
-AHUB is a framework for deploying analytical application inside docker containers.
+AHUB is a framework for deploying analytical applications inside docker containers.
 
 ![alt](figures/QUNIS-AHUB-Framework_Architektur.jpg)
 

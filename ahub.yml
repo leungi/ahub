@@ -7,21 +7,21 @@ services:
 # For compatibility with AHUB, container images
 # need to comply with the following:
 #   - publish a REST API on port 8000
-#   - provide a swagger.json file in the "/" path (only for GUI)
+#   - provide a swagger.json file in the "/" path (if you want to use the GUI)
 # -------------------------------------------
 
   node1:
-    image: qunis/ahub_rnode:1.0
+    image: qunis/ahub_rnode:2.0  # this is a demo container showcasing the R package ahubr
 
 # -------------------------------------------
   
   node2:
-    image: qunis/plumberdemo
+    image: qunis/plumberdemo  # this is a demo container showcasing R plumber
 
 # -------------------------------------------
   
   node3:
-    image: qunis/prophetdemo
+    image: qunis/prophetdemo  # this is a demo container showcasing Facebook's prophet
 
 
 # -------------------------------------------
@@ -35,6 +35,9 @@ services:
     configs:
       - source: main_config
         target: /app/config.yaml
+    deploy:
+      placement:
+        constraints: [node.role == manager]
 
 
 # -------------------------------------------
