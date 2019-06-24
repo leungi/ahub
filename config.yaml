@@ -31,7 +31,7 @@ TLS_TYPE: self-signed
 #   none:       Authentication disabled
 #   basic:      HTTP Basic Authentication with username and password
 #   aad:        Authentication via Azure Active Directory
-# when choosing 'basic' you need to provide a file '.htpasswd' in the folder ./configs
+# when choosing 'basic' you need to provide a file '.htpasswd' in the main folder.
 AUTH_TYPE: basic
 
 # -- optional -- (for AUTH_TYPE: aad) Azure Active Directory
