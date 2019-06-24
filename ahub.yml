@@ -1,4 +1,4 @@
-version: '3.3'
+vversion: '3.3'
 services:
 
 # -------------------------------------------
@@ -22,91 +22,31 @@ services:
   
   node3:
     image: qunis/prophetdemo
-    
-# -------------------------------------------
+
 
 # -------------------------------------------
 # SERVICE STACK (DO NOT TOUCH)
 # -------------------------------------------
 
-  nginx:
-    image: nginx
-    ports:
-      - "80:80"
-      - "443:443"
-    configs:
-      - source: nginx_template.conf
-        target: /etc/nginx/nginx.conf
-    secrets:
-      - source: server.crt
-        target: server.crt
-      - source: server.key
-        target: server.key
-      - source: htpasswd
-        target: .htpasswd
-    deploy:
-      placement:
-        constraints: [node.role == manager]
-# -------------------------------------------
-  redis:
-    image: redis:alpine
-    ports:
-      - "6379:6379"
-    volumes:
-      - "./data/redis/:/data"
-    deploy:
-      placement:
-        constraints: [node.role == manager]
-# -------------------------------------------
   boss:
-    image: qunis/ahub_boss:1.0.1
+    image: qunis/ahub_boss:2.0
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     configs:
-      - source: nginx_template.conf
-        target: /app/templates/nginx_template.conf
-      - source: location_template.conf
-        target: /app/templates/location_template.conf
-      - source: boss.config
-        target: /app/config.py
-    depends_on:
-      - redis
-# -------------------------------------------
-  gui:
-    image: qunis/ahub_reactgui:1.0
- # -------------------------------------------
-  updater:
-    image: qunis/ahub_updater:1.0
-# -------------------------------------------
-  portainer:
-    image: portainer/portainer
-    ports:
-      - "9000:9000"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
-      - "./data/portainer/:/data"
-    deploy:
-      placement:
-        constraints: [node.role == manager]
+      - source: main_config
+        target: /app/config.yaml
+
 
 # -------------------------------------------
 # CONFIGS & SECRETS
 # -------------------------------------------
         
 configs:
-  nginx_template.conf:
-    file: ./configs/nginx_template.conf
-  location_template.conf:
-    file: ./configs/location_template.conf
-  boss.config:
-    file: ./configs/bossconfig.py
+  main_config:
+    file: ./config.yaml
 
 secrets:
-  server.crt:
-    file: ./configs/server.crt
-  server.key:
-    file: ./configs/server.key
   htpasswd:
-    file: ./configs/.htpasswd
+    file: ./.htpasswd
 
 

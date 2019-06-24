@@ -1,4 +1,0 @@
-flask
-flasgger
-flask-cors
-certbot
