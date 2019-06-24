@@ -30,6 +30,7 @@ class Ahub(object):
         self.dockerhost = 'unix://var/run/docker.sock'
         self.nginxhost = 'nginx'
         self.network_name = ''
+        self.stack_name = ''
         self.dockerclient = None
         self.config = {}
         self.cert = {}
@@ -125,6 +126,17 @@ class Ahub(object):
             return True
         else:
             print('Virtual network name could not be identified.')
+            return False
+
+    def get_stack_name(self):
+        boss_name = [s.name for s in self.dockerclient.services.list() if 'boss' in s.name]
+        if boss_name:
+            boss = self.dockerclient.services.get(boss_name[0])
+            self.stack_name = boss.attrs['Spec']['Labels']['com.docker.stack.namespace']
+            print('Stack name is ' + self.stack_name)
+            return True
+        else:
+            print('Stack name could not be identified.')
             return False
 
 
@@ -314,8 +326,8 @@ class Ahub(object):
                                           networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'nginx',
-                                                  'com.docker.stack.namespace': 'ahub'},
-                                          container_labels={'com.docker.stack.namespace': 'ahub'},
+                                                  'com.docker.stack.namespace': self.stack_name},
+                                          container_labels={'com.docker.stack.namespace': self.stack_name},
                                           mounts=['tls:/etc/letsencrypt:ro'],
                                           secrets=[sref])
 
@@ -329,8 +341,8 @@ class Ahub(object):
                                           networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'redis:alpine',
-                                                  'com.docker.stack.namespace': 'ahub'},
-                                          container_labels={'com.docker.stack.namespace': 'ahub'},
+                                                  'com.docker.stack.namespace': self.stack_name},
+                                          container_labels={'com.docker.stack.namespace': self.stack_name},
                                           mounts=['redis:/data:rw'])
 
     def create_certbot(self):
@@ -340,8 +352,8 @@ class Ahub(object):
                                           networks=[self.network_name],
                                           env=['PYTHONUNBUFFERED=1'],
                                           labels={'com.docker.stack.image': 'qunis/ahub_certbot',
-                                                  'com.docker.stack.namespace': 'ahub'},
-                                          container_labels={'com.docker.stack.namespace': 'ahub'},
+                                                  'com.docker.stack.namespace': self.stack_name},
+                                          container_labels={'com.docker.stack.namespace': self.stack_name},
                                           mounts=['tls:/etc/letsencrypt:rw'],
                                           configs=[cref])
 
@@ -354,8 +366,8 @@ class Ahub(object):
                                           networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'portainer/portainer',
-                                                  'com.docker.stack.namespace': 'ahub'},
-                                          container_labels={'com.docker.stack.namespace': 'ahub'},
+                                                  'com.docker.stack.namespace': self.stack_name},
+                                          container_labels={'com.docker.stack.namespace': self.stack_name},
                                           mounts=['portainer:/data:rw',
                                                   '/var/run/docker.sock:/var/run/docker.sock'])
 
@@ -366,8 +378,8 @@ class Ahub(object):
                                           networks=[self.network_name],
                                           env=['PYTHONUNBUFFERED=1'],
                                           labels={'com.docker.stack.image': 'qunis/ahub_scheduler',
-                                                  'com.docker.stack.namespace': 'ahub'},
-                                          container_labels={'com.docker.stack.namespace': 'ahub'},
+                                                  'com.docker.stack.namespace': self.stack_name},
+                                          container_labels={'com.docker.stack.namespace': self.stack_name},
                                           configs=[cref])
 
     def create_aadauth(self):
@@ -377,8 +389,8 @@ class Ahub(object):
                                           networks=[self.network_name],
                                           env=['PYTHONUNBUFFERED=1'],
                                           labels={'com.docker.stack.image': 'qunis/ahub_aadauth',
-                                                  'com.docker.stack.namespace': 'ahub'},
-                                          container_labels={'com.docker.stack.namespace': 'ahub'},
+                                                  'com.docker.stack.namespace': self.stack_name},
+                                          container_labels={'com.docker.stack.namespace': self.stack_name},
                                           configs=[cref])
 
     def create_gui(self):
@@ -387,8 +399,8 @@ class Ahub(object):
                                           name='gui',
                                           networks=[self.network_name],
                                           labels={'com.docker.stack.image': 'qunis/ahub_reactgui',
-                                                  'com.docker.stack.namespace': 'ahub'},
-                                          container_labels={'com.docker.stack.namespace': 'ahub'},
+                                                  'com.docker.stack.namespace': self.stack_name},
+                                          container_labels={'com.docker.stack.namespace': self.stack_name},
                                           configs=[cref])
 
     def create_volumes(self):
