@@ -324,6 +324,7 @@ class Ahub(object):
         sref = self.get_secret_reference()
         self.dockerclient.services.create(image='nginx',
                                           name='nginx',
+                                          constraints=['node.role==manager'],
                                           networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'nginx',
@@ -339,6 +340,7 @@ class Ahub(object):
 
         self.dockerclient.services.create(image='redis:alpine',
                                           name='redis',
+                                          constraints=['node.role==manager'],
                                           networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'redis:alpine',
@@ -350,6 +352,7 @@ class Ahub(object):
         cref = self.get_config_reference()
         self.dockerclient.services.create(image='qunis/ahub_certbot:{0}'.format(str(self.config['VERSION'])),
                                           name='certbot',
+                                          constraints=['node.role==manager'],
                                           networks=[self.network_name],
                                           env=['PYTHONUNBUFFERED=1'],
                                           labels={'com.docker.stack.image': 'qunis/ahub_certbot',
@@ -364,6 +367,7 @@ class Ahub(object):
             ports[9000] = 9000
         self.dockerclient.services.create(image='portainer/portainer',
                                           name='portainer',
+                                          constraints=['node.role==manager'],
                                           networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'portainer/portainer',
@@ -484,7 +488,7 @@ class Ahub(object):
         """
         client = self.dockerclient
         raw = [service.name for service in client.services.list()]
-        services = [re.sub(r'ahub_', '', s) for s in raw]
+        services = [re.sub(self.stack_name + '_', '', s) for s in raw]
         potential_apis = [s for s in services if s not in self.stack]
         return potential_apis
 
@@ -494,7 +498,7 @@ class Ahub(object):
 
         try:
             raw = [service.name for service in client.services.list()]
-            services = [re.sub(r'ahub_', '', s) for s in raw]
+            services = [re.sub(self.stack_name + '_', '', s) for s in raw]
 
             potential_apis = [s for s in services if s not in self.stack]
             swagger_response = []
