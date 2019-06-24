@@ -54,6 +54,7 @@ class Ahub(object):
             print('Connection to docker host at ' + self.dockerhost + ' can not be established.')
             return False
         self.health['network'] = self.get_network_name()
+        self.health['stack'] = self.get_stack_name()
         self.health['volumes'] = self.create_volumes()  # create necessary mount volumes
         self.health['portainer'] = self.start_service('portainer')
         self.health['redis'] = self.start_service('redis')

@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y openssl
 EXPOSE 8000 80
 
 # Copy the current directory contents into the container at /app
-ADD config.yaml /app
+
 ADD *.py /app/
 
 
