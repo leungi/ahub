@@ -29,6 +29,7 @@ class Ahub(object):
         self.debug = False
         self.dockerhost = 'unix://var/run/docker.sock'
         self.nginxhost = 'nginx'
+        self.network_name = ''
         self.dockerclient = None
         self.config = {}
         self.cert = {}
@@ -51,7 +52,7 @@ class Ahub(object):
             print(err)
             print('Connection to docker host at ' + self.dockerhost + ' can not be established.')
             return False
-
+        self.health['network'] = self.get_network_name()
         self.health['volumes'] = self.create_volumes()  # create necessary mount volumes
         self.health['portainer'] = self.start_service('portainer')
         self.health['redis'] = self.start_service('redis')
@@ -113,6 +114,19 @@ class Ahub(object):
             print('Config errors have been found. AHUB launch has been aborted.')
 
         return flag
+
+    def get_network_name(self):
+        boss_name = [s.name for s in self.dockerclient.services.list() if 'boss' in s.name]
+        if boss_name:
+            boss = self.dockerclient.services.get(boss_name[0])
+            network_id = boss.attrs['Endpoint']['VirtualIPs'][0]['NetworkID']
+            self.network_name = self.dockerclient.networks.get(network_id).name
+            print('Network name is ' + self.network_name)
+            return True
+        else:
+            print('Virtual network name could not be identified.')
+            return False
+
 
     def get_nginx_status(self):
         """
@@ -192,9 +206,9 @@ class Ahub(object):
         """
         print('Polling certbot...', end='')
         ct = 0
-        retry = True
+        retry_success = False
         ans = None
-        while ct <= 5 and retry:
+        while ct <= 5 and not retry_success:
             try:
                 ans = requests.get('http://{0}:{1}/certbot/certificate_path'.format(self.nginxhost, '8000'))
             except requests.RequestException:
@@ -202,9 +216,9 @@ class Ahub(object):
                 print('.', end='')
                 time.sleep(0.2)
             else:
-                retry = False
+                retry_success = True
 
-        if retry:
+        if not retry_success:
             print('Could not establish connection to certbot.')
             return False
 
@@ -217,9 +231,18 @@ class Ahub(object):
             else:
                 print('Certificate not found. Applying for new one...')
                 if self.apply_for_certificate():
-                    return self.check_certificate()
+                    return self.check_certificate()  # need to stop endless loop
                 else:
+                    print('Certificate could not be installed. Services will not be reachable under ports 80 and 443.')
                     return False
+                    # TODO: automatic fallback to self-signed. For this to work, the global config
+                    #       needs to be changed and uploaded to the stack
+                    #if self.config['TLS_TYPE'] == 'letsencrypt':
+                    #    print('Falling back to self-signed certificate.')
+                    #    self.config['TLS_TYPE'] = 'self-signed'
+                    #    return self.check_certificate()
+                    #else:
+                    #    return False
         else:
             print(ans.status_code)
             return False
@@ -235,8 +258,14 @@ class Ahub(object):
             print('Could not establish connection to certbot.')
             return False
         else:
-            print(ans.content)
-            return True
+            response = ans.content.decode("utf-8")
+            print(response)
+            if response:
+                print('Certificate successfully created.')
+                return True
+            else:
+                print('ERROR: {0} certificate could not be created. Please check certbot logs.'.format(self.config['TLS_TYPE']))
+                return False
 
     def start_service(self, name):
         """
@@ -282,7 +311,7 @@ class Ahub(object):
         sref = self.get_secret_reference()
         self.dockerclient.services.create(image='nginx',
                                           name='nginx',
-                                          networks=['ahub_default'],
+                                          networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'nginx',
                                                   'com.docker.stack.namespace': 'ahub'},
@@ -297,7 +326,7 @@ class Ahub(object):
 
         self.dockerclient.services.create(image='redis:alpine',
                                           name='redis',
-                                          networks=['ahub_default'],
+                                          networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'redis:alpine',
                                                   'com.docker.stack.namespace': 'ahub'},
@@ -308,7 +337,7 @@ class Ahub(object):
         cref = self.get_config_reference()
         self.dockerclient.services.create(image='qunis/ahub_certbot:{0}'.format(str(self.config['VERSION'])),
                                           name='certbot',
-                                          networks=['ahub_default'],
+                                          networks=[self.network_name],
                                           env=['PYTHONUNBUFFERED=1'],
                                           labels={'com.docker.stack.image': 'qunis/ahub_certbot',
                                                   'com.docker.stack.namespace': 'ahub'},
@@ -322,7 +351,7 @@ class Ahub(object):
             ports[9000] = 9000
         self.dockerclient.services.create(image='portainer/portainer',
                                           name='portainer',
-                                          networks=['ahub_default'],
+                                          networks=[self.network_name],
                                           endpoint_spec=docker.types.EndpointSpec(ports=ports),
                                           labels={'com.docker.stack.image': 'portainer/portainer',
                                                   'com.docker.stack.namespace': 'ahub'},
@@ -334,8 +363,8 @@ class Ahub(object):
         cref = self.get_config_reference()
         self.dockerclient.services.create(image='qunis/ahub_scheduler:{0}'.format(str(self.config['VERSION'])),
                                           name='scheduler',
-                                          networks=['ahub_default'],
-                                          env = ['PYTHONUNBUFFERED=1'],
+                                          networks=[self.network_name],
+                                          env=['PYTHONUNBUFFERED=1'],
                                           labels={'com.docker.stack.image': 'qunis/ahub_scheduler',
                                                   'com.docker.stack.namespace': 'ahub'},
                                           container_labels={'com.docker.stack.namespace': 'ahub'},
@@ -345,7 +374,7 @@ class Ahub(object):
         cref = self.get_config_reference()
         self.dockerclient.services.create(image='qunis/ahub_aadauth:{}'.format(str(self.config['VERSION'])),
                                           name='aadauth',
-                                          networks=['ahub_default'],
+                                          networks=[self.network_name],
                                           env=['PYTHONUNBUFFERED=1'],
                                           labels={'com.docker.stack.image': 'qunis/ahub_aadauth',
                                                   'com.docker.stack.namespace': 'ahub'},
@@ -356,7 +385,7 @@ class Ahub(object):
         cref = self.get_config_reference()
         self.dockerclient.services.create(image='qunis/ahub_reactgui:{}'.format(str(self.config['VERSION'])),
                                           name='gui',
-                                          networks=['ahub_default'],
+                                          networks=[self.network_name],
                                           labels={'com.docker.stack.image': 'qunis/ahub_reactgui',
                                                   'com.docker.stack.namespace': 'ahub'},
                                           container_labels={'com.docker.stack.namespace': 'ahub'},

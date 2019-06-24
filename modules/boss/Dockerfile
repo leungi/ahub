@@ -19,4 +19,4 @@ ADD ./templates/. /app/templates/
 
 
 # Run app.py when the container launches
-CMD ["python", "app.py"]
+CMD ["python", "-u", "app.py"]

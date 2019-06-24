@@ -30,55 +30,7 @@ http {
         }
     }
 
-    server {
-        listen 443 ssl;
-
-        ssl_certificate         /etc/letsencrypt/live/ahub.westeurope.cloudapp.azure.com/fullchain.pem;
-        ssl_certificate_key     /etc/letsencrypt/live/ahub.westeurope.cloudapp.azure.com/privkey.pem;
-
-        location / {
-
-            # challenge authorization
-            auth_request /auth-proxy;
-
-            # redirect 401 to login form
-            error_page 401 =200 /login;
-
-            proxy_pass http://localhost:8000;
-            proxy_redirect off;
-         }
-
-        location /auth-proxy {
-            resolver            127.0.0.11;
-            set $aadauth        aadauth:8000;
-            internal;
-            proxy_pass http://$aadauth/auth-proxy;
-            proxy_pass_request_body off;
-            proxy_set_header Content-Length "";
-            proxy_cache auth_cache;
-            proxy_cache_valid 200 10m;
-            proxy_cache_key "$http_authorization$cookie_nginxauth";
-        }
-
-        location /login {
-            resolver            127.0.0.11;
-            set $aadauth        aadauth:8000;
-            internal;
-            proxy_pass http://$aadauth$uri?$args;
-            proxy_set_header X-Target $scheme://$host$request_uri;
-        }
-
-        location /authorize {
-            resolver            127.0.0.11;
-            set $aadauth        aadauth:8000;
-            proxy_pass http://$aadauth$uri?$args;
-        }
-
-#SERVICEBLOCK
-
-#NODEBLOCK
-
-    }
+#SERVERBLOCK
 
     server {
         listen 8000;
@@ -121,18 +73,7 @@ http {
         }
 
 
-        location /node2/ {
-            proxy_pass          http://node2:8000/;
-            proxy_redirect     http://node2:8000/ /;
-        }
-        location /node3/ {
-            proxy_pass          http://node3:8000/;
-            proxy_redirect     http://node3:8000/ /;
-        }
-        location /node1/ {
-            proxy_pass          http://node1:8000/;
-            proxy_redirect     http://node1:8000/ /;
-        }
+
 
     }
 }
