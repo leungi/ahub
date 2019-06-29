@@ -152,7 +152,7 @@ Swarm initialized: current node (XXX) is now a manager.
 ```
 The whole stack can be launched by docker in swarm mode with the following command
 ```bash
-docker stack deploy -c ./ahub.yaml mystack
+docker stack deploy -c ./ahub.yml mystack
 ```
 This command references the Compose file *ahub.yaml* to deploy a stack called *mystack*. Of course you can change the name of your stack to your liking.You should see the following output on the shell:
 ```bash
@@ -177,7 +177,7 @@ Under the Services tab you should see 9 services if you stuck to the demo file. 
 ![alt](figures/service_stack.png)
 
 ## Checking the API endpoints
-You can now navigate to your endpoints via https://localhost/{nodename}/{endpoint}?{parameters}. For example https://localhost/node2/plot or https://localhost/node3/?n=24. You will be warned by your browser about the insecure certificate (because we have self-signed it, skip this warning) and be asked for the user credentials.
+You can now navigate to your endpoints via https://localhost/{nodename}/{endpoint}?{parameters}. For example https://localhost/node2/?plot or https://localhost/node3/?n=24. You will be warned by your browser about the insecure certificate (because we have self-signed it, skip this warning) and be asked for the user credentials.
 
 There is also a rudimentary GUI at https://localhost/gui/ (still under development) showing you the various nodes and their endpoints so you can manually trigger a GET request for testing purposes.
 
